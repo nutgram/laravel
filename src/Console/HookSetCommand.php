@@ -38,7 +38,11 @@ class HookSetCommand extends Command
         /** @var Nutgram $bot */
         $bot = app(Nutgram::class);
 
-        $bot->setWebhook($url, array_filter(compact('ip_address', 'max_connections')));
+        $bot->setWebhook(
+            url: $url,
+            ip_address: $ip_address,
+            max_connections: $max_connections,
+        );
 
         $this->info("Bot webhook set with url: $url");
 

@@ -29,7 +29,7 @@
   "prefer-stable": true,
   "require": {
     "php": "^8.2",
-    "nutgram/nutgram": "^3.13"
+    "nutgram/nutgram": "4.x-dev"
   },
   "require-dev": {
     "illuminate/testing": "^9.0|^10.0",

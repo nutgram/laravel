@@ -26,9 +26,7 @@ class HookRemoveCommand extends Command
         /** @var Nutgram $bot */
         $bot = app(Nutgram::class);
 
-        $bot->deleteWebhook([
-            'drop_pending_updates' => $dropPendingUpdates,
-        ]);
+        $bot->deleteWebhook($dropPendingUpdates);
 
         if ($dropPendingUpdates) {
             $this->info('Pending updates dropped.');

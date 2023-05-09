@@ -13,7 +13,7 @@ use Nutgram\Laravel\Console\MakeHandlerCommand;
 use Nutgram\Laravel\Console\MakeMiddlewareCommand;
 use Nutgram\Laravel\Console\RegisterCommandsCommand;
 use SergiX44\Nutgram\Nutgram;
-use SergiX44\Nutgram\Telegram\Attributes\MessageTypes;
+use SergiX44\Nutgram\Telegram\Properties\MessageType;
 use SergiX44\Nutgram\Telegram\Types\Common\WebhookInfo;
 
 test('nutgram:register-commands registers the bot commands', function () {
@@ -104,9 +104,7 @@ test('nutgram:hook:info does not print the webhook info', function () {
 
 test('nutgram:hook:remove removes the bot webhook', function () {
     $this->mock(Nutgram::class, function (MockInterface $mock) {
-        $mock->shouldReceive('deleteWebhook')->with([
-            'drop_pending_updates' => false,
-        ])->andReturn(0);
+        $mock->shouldReceive('deleteWebhook')->with(false)->andReturn(0);
     });
 
     $this->artisan(HookRemoveCommand::class, ['--drop-pending-updates' => false])
@@ -129,9 +127,7 @@ test('nutgram:hook:remove removes the bot webhook and the pending updates', func
 
 test('nutgram:hook:set sets the bot webhook', function () {
     $this->mock(Nutgram::class, function (MockInterface $mock) {
-        $mock->shouldReceive('setWebhook')->with('https://foo.bar/hook', [
-            'max_connections' => 50,
-        ])->andReturn(0);
+        $mock->shouldReceive('setWebhook')->with('https://foo.bar/hook', null, null, 50)->andReturn(0);
     });
 
     $this->artisan(HookSetCommand::class, ['url' => 'https://foo.bar/hook'])
@@ -161,7 +157,7 @@ test('nutgram:list with handler registered', function () {
     });
     $bot->onText('foo', [$callback, 'foo']);
     $bot->onMessage([$callback::class, 'foo']);
-    $bot->onMessageType(MessageTypes::PHOTO, static function () {
+    $bot->onMessageType(MessageType::PHOTO, static function () {
     });
     $bot->onEditedMessage(static function () {
     });
@@ -179,7 +175,7 @@ test('nutgram:list with handler registered', function () {
     });
     $bot->onPreCheckoutQuery(static function () {
     });
-    $bot->onPoll(static function () {
+    $bot->onMessagePoll(static function () {
     });
     $bot->onPollAnswer(static function () {
     });

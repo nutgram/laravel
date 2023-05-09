@@ -10,6 +10,7 @@ use ReflectionProperty;
 use SergiX44\Nutgram\Handlers\Handler;
 use SergiX44\Nutgram\Nutgram;
 use SergiX44\Nutgram\Telegram\Attributes\MessageTypes;
+use SergiX44\Nutgram\Telegram\Properties\MessageType;
 use Symfony\Component\Console\Terminal;
 
 class ListCommand extends Command
@@ -88,7 +89,7 @@ class ListCommand extends Command
                         return 'onText';
                     }
 
-                    if (!in_array($subHandlerName, MessageTypes::all(), true)) {
+                    if (MessageType::tryFrom($subHandlerName)===null) {
                         return 'onMessage';
                     }
 
@@ -125,11 +126,11 @@ class ListCommand extends Command
         $subHandlerSignature = Str::after($value, 'message.');
         [$subHandlerName] = array_pad(explode('.', $subHandlerSignature), 1, null);
 
-        if (!in_array($subHandlerName, MessageTypes::all(), true)) {
+        if (MessageType::tryFrom($subHandlerName)===null) {
             return null;
         }
 
-        return sprintf("MessageTypes::%s", Str::upper($subHandlerName ?? 'UNKNOWN'));
+        return sprintf("MessageType::%s", Str::upper($subHandlerName ?? 'UNKNOWN'));
     }
 
     protected function getCallableName(mixed $callable): string

@@ -7,7 +7,8 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Psr\Log\LoggerInterface;
 use Nutgram\Laravel\Console;
-use SergiX44\Nutgram\Laravel\Mixins;
+use Nutgram\Laravel\Mixins;
+use SergiX44\Nutgram\Configuration;
 use SergiX44\Nutgram\Nutgram;
 use SergiX44\Nutgram\RunningMode\Polling;
 use SergiX44\Nutgram\RunningMode\Webhook;
@@ -32,11 +33,14 @@ class NutgramServiceProvider extends ServiceProvider
                 return Nutgram::fake();
             }
 
-            $bot = new Nutgram(config('nutgram.token') ?? FakeNutgram::TOKEN, array_merge([
+            $configuration = Configuration::fromArray([
                 'container' => $app,
                 'cache' => $app->get(Cache::class),
                 'logger' => $app->get(LoggerInterface::class)->channel(config('nutgram.log_channel', 'null')),
-            ], config('nutgram.config', [])));
+                ...config('nutgram.config', []),
+            ]);
+
+            $bot = new Nutgram(config('nutgram.token') ?? FakeNutgram::TOKEN, $configuration);
 
             if ($app->runningInConsole()) {
                 $bot->setRunningMode(Polling::class);
@@ -56,7 +60,7 @@ class NutgramServiceProvider extends ServiceProvider
         $this->app->alias(Nutgram::class, 'nutgram');
         $this->app->alias(Nutgram::class, FakeNutgram::class);
 
-        $this->app->bind('bot', function(Application $app) {
+        $this->app->bind('bot', function (Application $app) {
             return $app->get(Nutgram::class);
         });
 
