@@ -19,12 +19,9 @@ class HookRemoveCommand extends Command
      * @throws GuzzleException
      * @throws JsonException
      */
-    public function handle(): int
+    public function handle(Nutgram $bot): int
     {
         $dropPendingUpdates = $this->option('drop-pending-updates');
-
-        /** @var Nutgram $bot */
-        $bot = app(Nutgram::class);
 
         $bot->deleteWebhook($dropPendingUpdates);
 

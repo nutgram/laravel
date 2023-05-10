@@ -11,11 +11,8 @@ class RegisterCommandsCommand extends Command
 
     protected $description = 'Register the bot commands';
 
-    public function handle(): int
+    public function handle(Nutgram $bot): int
     {
-        /** @var Nutgram $bot */
-        $bot = app(Nutgram::class);
-
         $bot->registerMyCommands();
 
         $this->info('Bot commands set.');

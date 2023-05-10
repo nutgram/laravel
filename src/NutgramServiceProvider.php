@@ -72,6 +72,8 @@ class NutgramServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        $this->loadViewsFrom(__DIR__.'/../resources/views/terminal', 'terminal');
+
         if ($this->app->runningInConsole()) {
             $this->commands([
                 Console\RunCommand::class,

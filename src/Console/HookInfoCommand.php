@@ -7,6 +7,8 @@ use Illuminate\Console\Command;
 use JsonException;
 use SergiX44\Nutgram\Nutgram;
 use SergiX44\Nutgram\Telegram\Exceptions\TelegramException;
+use function Termwind\{render};
+
 
 class HookInfoCommand extends Command
 {
@@ -24,7 +26,7 @@ class HookInfoCommand extends Command
         $webhookInfo = $bot->getWebhookInfo();
 
         if ($webhookInfo === null) {
-            $this->error('Unable to get webhook info');
+            render(view('terminal::fail', ['value' => 'Unable to get webhook info']));
             return 1;
         }
 
@@ -38,17 +40,19 @@ class HookInfoCommand extends Command
             $lastSynchronizationErrorDate = date('Y-m-d H:i:s', $webhookInfo->last_synchronization_error_date).' UTC';
         }
 
-        $this->table(['Info', 'Value'], [
-            ['url', $webhookInfo->url],
-            ['has_custom_certificate', $webhookInfo->has_custom_certificate ? 'true' : 'false'],
-            ['pending_update_count', $webhookInfo->pending_update_count],
-            ['ip_address', $webhookInfo->ip_address],
-            ['last_error_date', $lastErrorDate],
-            ['last_error_message', $webhookInfo->last_error_message],
-            ['last_synchronization_error_date', $lastSynchronizationErrorDate],
-            ['max_connections', $webhookInfo->max_connections],
-            ['allowed_updates', implode(', ', $webhookInfo->allowed_updates ?: [])],
-        ]);
+        render(view('terminal::table', [
+            'items' => [
+                'url' => $webhookInfo->url,
+                'has_custom_certificate' => $webhookInfo->has_custom_certificate ? 'true' : 'false',
+                'pending_update_count' => $webhookInfo->pending_update_count,
+                'ip_address' => $webhookInfo->ip_address,
+                'last_error_date' => $lastErrorDate,
+                'last_error_message' => $webhookInfo->last_error_message,
+                'last_synchronization_error_date' => $lastSynchronizationErrorDate,
+                'max_connections' => $webhookInfo->max_connections,
+                'allowed_updates' => implode(', ', $webhookInfo->allowed_updates ?: []),
+            ]
+        ]));
 
         return 0;
     }

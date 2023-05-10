@@ -19,7 +19,7 @@ class HookSetCommand extends Command
      * @throws GuzzleException
      * @throws JsonException
      */
-    public function handle(): int
+    public function handle(Nutgram $bot): int
     {
         /** @var string $url */
         $url = $this->argument('url');
@@ -34,9 +34,6 @@ class HookSetCommand extends Command
         if (is_numeric($max_connections)) {
             $max_connections = (int)$max_connections;
         }
-
-        /** @var Nutgram $bot */
-        $bot = app(Nutgram::class);
 
         $bot->setWebhook(
             url: $url,
