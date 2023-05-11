@@ -351,15 +351,8 @@ class Telegram extends Facade
         return 'telegram';
     }
 
-
     public static function fake(): void
     {
         static::swap(Nutgram::fake());
     }
-
-    /*
-    public static function group(callable $callable): HandlerGroup
-    {
-        dd('aaa');
-    }*/
 }
