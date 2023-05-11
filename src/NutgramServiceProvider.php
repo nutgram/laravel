@@ -5,9 +5,9 @@ namespace Nutgram\Laravel;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
-use Psr\Log\LoggerInterface;
 use Nutgram\Laravel\Console;
 use Nutgram\Laravel\Mixins;
+use Psr\Log\LoggerInterface;
 use SergiX44\Nutgram\Configuration;
 use SergiX44\Nutgram\Nutgram;
 use SergiX44\Nutgram\RunningMode\Polling;
@@ -59,10 +59,7 @@ class NutgramServiceProvider extends ServiceProvider
 
         $this->app->alias(Nutgram::class, 'nutgram');
         $this->app->alias(Nutgram::class, FakeNutgram::class);
-
-        $this->app->bind('bot', function (Application $app) {
-            return $app->get(Nutgram::class);
-        });
+        $this->app->singleton('telegram', fn (Application $app) => $app->get(Nutgram::class));
 
         if (config('nutgram.mixins', false)) {
             Nutgram::mixin(new Mixins\NutgramMixin());

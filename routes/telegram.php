@@ -1,6 +1,6 @@
 <?php
 
-use Nutgram\Laravel\Facades\Bot;
+use Nutgram\Laravel\Facades\Telegram;
 use SergiX44\Nutgram\Nutgram;
 
 /*
@@ -13,6 +13,6 @@ use SergiX44\Nutgram\Nutgram;
 |
 */
 
-Bot::onCommand('start', function (Nutgram $bot) {
+Telegram::onCommand('start', function (Nutgram $bot) {
     return $bot->sendMessage('Hello, world!');
 })->description('The start command!');

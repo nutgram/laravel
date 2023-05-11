@@ -25,3 +25,7 @@ ij_php_concat_spaces = false
 
 [*.json]
 indent_size = 2
+
+[src/Facades/Telegram.php]
+max_line_length = off
+ij_php_phpdoc_wrap_long_lines = false
