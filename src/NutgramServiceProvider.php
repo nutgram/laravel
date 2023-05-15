@@ -29,16 +29,27 @@ class NutgramServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(self::CONFIG_PATH, 'nutgram');
 
         $this->app->singleton(Nutgram::class, function (Application $app) {
-            if ($app->runningUnitTests()) {
-                return Nutgram::fake();
-            }
+            $configuration = new Configuration(
+                apiUrl: config('nutgram.config.api_url', Configuration::DEFAULT_API_URL),
+                botId: config('nutgram.config.bot_id'),
+                botName: config('nutgram.config.bot_name'),
+                testEnv: config('nutgram.config.test_env', false),
+                isLocal: config('nutgram.config.is_local', false),
+                clientTimeout: config('nutgram.config.timeout', Configuration::DEFAULT_CLIENT_TIMEOUT),
+                clientOptions: config('nutgram.config.client', []),
+                container: $app,
+                hydrator: config('nutgram.config.hydrator', Configuration::DEFAULT_HYDRATOR),
+                cache: $app->get(Cache::class),
+                logger: $app->get(LoggerInterface::class)->channel(config('nutgram.log_channel', 'null')),
+                localPathTransformer: config('nutgram.config.local_path_transformer'),
+                pollingTimeout: config('nutgram.config.polling.timeout', Configuration::DEFAULT_POLLING_TIMEOUT),
+                pollingAllowedUpdates: config('nutgram.config.polling.allowed_updates', Configuration::DEFAULT_ALLOWED_UPDATES),
+                pollingLimit: config('nutgram.config.polling.limit', Configuration::DEFAULT_POLLING_LIMIT),
+            );
 
-            $configuration = Configuration::fromArray([
-                'container' => $app,
-                'cache' => $app->get(Cache::class),
-                'logger' => $app->get(LoggerInterface::class)->channel(config('nutgram.log_channel', 'null')),
-                ...config('nutgram.config', []),
-            ]);
+            if ($app->runningUnitTests()) {
+                return Nutgram::fake(config: $configuration);
+            }
 
             $bot = new Nutgram(config('nutgram.token') ?? FakeNutgram::TOKEN, $configuration);
 
