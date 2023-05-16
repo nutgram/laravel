@@ -30,12 +30,12 @@ class MixinUtils
             $path .= basename($file->file_path ?? $file->file_id);
         }
 
-        if ($file->getConfig()['is_local'] ?? false) {
+        if ($file->getConfig()->is_local ?? false) {
             return $storage->put($path, $file->downloadUrl($file));
         }
 
         //create temp file
-        $tmpFile = tempnam(sys_get_temp_dir(), uniqid(strftime('%G-%m-%d')));
+        $tmpFile = tempnam(sys_get_temp_dir(), uniqid(strftime('%G-%m-%d'), true));
 
         //download file to temp file
         $http = $file->getContainer()->get(ClientInterface::class);

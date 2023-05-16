@@ -13,7 +13,7 @@ class IdeGenerateCommand extends Command
 
     public function handle(): int
     {
-        $this->info('Generating IDE helper...');
+        $this->warn('Generating IDE helper...');
 
         $helper = file_get_contents(__DIR__.'/../Stubs/Ide.stub');
 

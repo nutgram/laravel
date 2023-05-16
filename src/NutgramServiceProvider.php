@@ -5,9 +5,10 @@ namespace Nutgram\Laravel;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
-use Psr\Log\LoggerInterface;
 use Nutgram\Laravel\Console;
-use SergiX44\Nutgram\Laravel\Mixins;
+use Nutgram\Laravel\Mixins;
+use Psr\Log\LoggerInterface;
+use SergiX44\Nutgram\Configuration;
 use SergiX44\Nutgram\Nutgram;
 use SergiX44\Nutgram\RunningMode\Polling;
 use SergiX44\Nutgram\RunningMode\Webhook;
@@ -28,15 +29,29 @@ class NutgramServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(self::CONFIG_PATH, 'nutgram');
 
         $this->app->singleton(Nutgram::class, function (Application $app) {
+            $configuration = new Configuration(
+                apiUrl: config('nutgram.config.api_url', Configuration::DEFAULT_API_URL),
+                botId: config('nutgram.config.bot_id'),
+                botName: config('nutgram.config.bot_name'),
+                testEnv: config('nutgram.config.test_env', false),
+                isLocal: config('nutgram.config.is_local', false),
+                clientTimeout: config('nutgram.config.timeout', Configuration::DEFAULT_CLIENT_TIMEOUT),
+                clientOptions: config('nutgram.config.client', []),
+                container: $app,
+                hydrator: config('nutgram.config.hydrator', Configuration::DEFAULT_HYDRATOR),
+                cache: $app->get(Cache::class),
+                logger: $app->get(LoggerInterface::class)->channel(config('nutgram.log_channel', 'null')),
+                localPathTransformer: config('nutgram.config.local_path_transformer'),
+                pollingTimeout: config('nutgram.config.polling.timeout', Configuration::DEFAULT_POLLING_TIMEOUT),
+                pollingAllowedUpdates: config('nutgram.config.polling.allowed_updates', Configuration::DEFAULT_ALLOWED_UPDATES),
+                pollingLimit: config('nutgram.config.polling.limit', Configuration::DEFAULT_POLLING_LIMIT),
+            );
+
             if ($app->runningUnitTests()) {
-                return Nutgram::fake();
+                return Nutgram::fake(config: $configuration);
             }
 
-            $bot = new Nutgram(config('nutgram.token') ?? FakeNutgram::TOKEN, array_merge([
-                'container' => $app,
-                'cache' => $app->get(Cache::class),
-                'logger' => $app->get(LoggerInterface::class)->channel(config('nutgram.log_channel', 'null')),
-            ], config('nutgram.config', [])));
+            $bot = new Nutgram(config('nutgram.token') ?? FakeNutgram::TOKEN, $configuration);
 
             if ($app->runningInConsole()) {
                 $bot->setRunningMode(Polling::class);
@@ -55,10 +70,7 @@ class NutgramServiceProvider extends ServiceProvider
 
         $this->app->alias(Nutgram::class, 'nutgram');
         $this->app->alias(Nutgram::class, FakeNutgram::class);
-
-        $this->app->bind('bot', function(Application $app) {
-            return $app->get(Nutgram::class);
-        });
+        $this->app->singleton('telegram', fn (Application $app) => $app->get(Nutgram::class));
 
         if (config('nutgram.mixins', false)) {
             Nutgram::mixin(new Mixins\NutgramMixin());
@@ -68,6 +80,8 @@ class NutgramServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        $this->loadViewsFrom(__DIR__.'/../resources/views/terminal', 'terminal');
+
         if ($this->app->runningInConsole()) {
             $this->commands([
                 Console\RunCommand::class,

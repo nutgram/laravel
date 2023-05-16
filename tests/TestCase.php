@@ -5,6 +5,7 @@ namespace Nutgram\Laravel\Tests;
 use Illuminate\Foundation\Application;
 use Nutgram\Laravel\NutgramServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
+use Termwind\Laravel\TermwindServiceProvider;
 
 class TestCase extends OrchestraTestCase
 {
@@ -17,6 +18,7 @@ class TestCase extends OrchestraTestCase
     {
         return [
             NutgramServiceProvider::class,
+            TermwindServiceProvider::class,
         ];
     }
 }
