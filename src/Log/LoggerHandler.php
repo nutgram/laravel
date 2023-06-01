@@ -30,16 +30,11 @@ class LoggerHandler extends AbstractProcessingHandler
 
     protected function write(LogRecord $record): void
     {
-        $oldSplitConfig = config('nutgram.config.split_long_messages', false);
-        config(['nutgram.config.split_long_messages' => true]);
-
-        $this->bot->sendMessage(
+        $this->bot->sendChunkedMessage(
             text: $this->formatText($record),
             chat_id: $this->chatId,
             parse_mode: 'html',
         );
-
-        config(['nutgram.config.split_long_messages' => $oldSplitConfig]);
     }
 
     protected function formatText(LogRecord $record): string
