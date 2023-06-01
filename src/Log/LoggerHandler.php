@@ -6,6 +6,7 @@ use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
+use Monolog\LogRecord;
 use SergiX44\Nutgram\Nutgram;
 
 class LoggerHandler extends AbstractProcessingHandler
@@ -27,20 +28,16 @@ class LoggerHandler extends AbstractProcessingHandler
         return new LineFormatter("%message% %context% %extra%\n");
     }
 
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
-        $oldSplitConfig = config('nutgram.config.split_long_messages', false);
-        config(['nutgram.config.split_long_messages' => true]);
-
-        $this->bot->sendMessage($this->formatText($record), [
-            'chat_id' => $this->chatId,
-            'parse_mode' => 'html',
-        ]);
-
-        config(['nutgram.config.split_long_messages' => $oldSplitConfig]);
+        $this->bot->sendChunkedMessage(
+            text: $this->formatText($record),
+            chat_id: $this->chatId,
+            parse_mode: 'html',
+        );
     }
 
-    protected function formatText(array $record): string
+    protected function formatText(LogRecord $record): string
     {
         return sprintf(
             "<b>%s %s</b> (%s):\n<pre>%s</pre>",
