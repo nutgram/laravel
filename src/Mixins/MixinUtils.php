@@ -2,7 +2,6 @@
 
 namespace Nutgram\Laravel\Mixins;
 
-use Illuminate\Http\File as LaravelFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Psr\Container\ContainerExceptionInterface;
@@ -42,13 +41,23 @@ class MixinUtils
         }
 
         //create temp file
-        $tmpFile = tempnam(sys_get_temp_dir(), uniqid(time(), true));
+        $maxMemory = 20 * 1024 * 1024;
+        $tmpFile = fopen(sprintf("php://temp/maxmemory:%d", $maxMemory), 'wb+');
 
         //download file to temp file
         $http = $bot->getContainer()->get(ClientInterface::class);
-        $http->get($bot->downloadUrl($file), array_merge(['sink' => $tmpFile], $clientOpt));
+        $response = $http->get($bot->downloadUrl($file), array_merge(['sink' => $tmpFile], $clientOpt));
+
+        //detach resource
+        $response->getBody()->detach();
 
         //save temp file to disk
-        return $storage->putFileAs('/', new LaravelFile($tmpFile), $path);
+        $result = $storage->put($path, $tmpFile);
+
+        //close temp file
+        fclose($tmpFile);
+
+        //return result
+        return $result;
     }
 }
