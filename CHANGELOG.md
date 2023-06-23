@@ -2,6 +2,15 @@
 
 All notable changes to `nutgram/laravel` will be documented in this file.
 
+## 1.0.2 - 2023-06-23
+
+### What's Changed
+
+- Use nutgram 4.0.2 by @Lukasss93 in https://github.com/nutgram/laravel/pull/7
+- Fix missing temp file deletion when using the mixin method by @Lukasss93 in https://github.com/nutgram/laravel/pull/6
+
+**Full Changelog**: https://github.com/nutgram/laravel/compare/1.0.1...1.0.2
+
 ## 1.0.1 - 2023-06-01
 
 ### What's Changed
