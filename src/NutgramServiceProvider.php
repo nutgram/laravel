@@ -45,6 +45,7 @@ class NutgramServiceProvider extends ServiceProvider
                 pollingTimeout: config('nutgram.config.polling.timeout', Configuration::DEFAULT_POLLING_TIMEOUT),
                 pollingAllowedUpdates: config('nutgram.config.polling.allowed_updates', Configuration::DEFAULT_ALLOWED_UPDATES),
                 pollingLimit: config('nutgram.config.polling.limit', Configuration::DEFAULT_POLLING_LIMIT),
+                enableHttp2: config('nutgram.config.enable_http2', Configuration::DEFAULT_ENABLE_HTTP2),
             );
 
             if ($app->runningUnitTests()) {
