@@ -101,6 +101,7 @@ class NutgramServiceProvider extends ServiceProvider
 
             $this->publishes([
                 self::CONFIG_PATH => config_path('nutgram.php'),
+                self::ROUTES_PATH => $this->telegramRoutes,
             ], 'nutgram');
         }
 
