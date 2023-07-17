@@ -1,4 +1,4 @@
-# Nugram Package for Laravel
+# Nutgram Package for Laravel
 
 [![Version](https://img.shields.io/packagist/v/nutgram/laravel?label=composer&logo=composer)](https://packagist.org/packages/nutgram/laravel)
 [![Total Downloads](https://img.shields.io/packagist/dt/nutgram/laravel.svg)](https://packagist.org/packages/nutgram/laravel)
