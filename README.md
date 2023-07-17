@@ -5,6 +5,7 @@
 ![License](https://img.shields.io/github/license/nutgram/laravel)
 ![PHP](https://img.shields.io/packagist/dependency-v/nutgram/laravel/php?logo=php)
 ![Laravel](https://img.shields.io/badge/laravel-%5E9.0|%5E10.0-orange?logo=laravel)
+[![Nutgram](https://img.shields.io/packagist/dependency-v/nutgram/laravel/nutgram/nutgram?logo=telegram&label=nutgram)](https://github.com/nutgram/nutgram)
 
 ![Tests](https://img.shields.io/github/actions/workflow/status/nutgram/laravel/php.yml?label=Test%20Suite&logo=github)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/feaa33a8d1431d16998d/test_coverage)](https://codeclimate.com/github/nutgram/laravel/test_coverage)
