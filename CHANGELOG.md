@@ -2,6 +2,15 @@
 
 All notable changes to `nutgram/laravel` will be documented in this file.
 
+## 1.0.3 - 2023-07-17
+
+### What's Changed
+
+- Fix missing loading of telegram.php route file by @Lukasss93 in https://github.com/nutgram/laravel/pull/8
+- Use nutgram 4.2.0
+
+**Full Changelog**: https://github.com/nutgram/laravel/compare/1.0.2...1.0.3
+
 ## 1.0.2 - 2023-06-23
 
 ### What's Changed
