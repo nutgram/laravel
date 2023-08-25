@@ -5,8 +5,6 @@ namespace Nutgram\Laravel;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
-use Nutgram\Laravel\Console;
-use Nutgram\Laravel\Mixins;
 use Psr\Log\LoggerInterface;
 use SergiX44\Nutgram\Configuration;
 use SergiX44\Nutgram\Nutgram;
@@ -81,9 +79,9 @@ class NutgramServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->loadViewsFrom(__DIR__.'/../resources/views/terminal', 'terminal');
-
         if ($this->app->runningInConsole()) {
+            $this->loadViewsFrom(__DIR__.'/../resources/views/terminal', 'terminal');
+
             $this->commands([
                 Console\RunCommand::class,
                 Console\RegisterCommandsCommand::class,
