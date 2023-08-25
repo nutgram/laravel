@@ -22,10 +22,23 @@ abstract class BaseMakeCommand extends Command
         $stub = $this->getStubContent($this->getStubPath(), $this->getStubVariables());
 
         //get destination path
-        $path = config('nutgram.namespace').'/'.$this->getSubDirName().'/'.$name.'.php';
+        $path = sprintf("%s%s%s%s%s.php",
+            config('nutgram.namespace'),
+            DIRECTORY_SEPARATOR,
+            $this->getSubDirName(),
+            DIRECTORY_SEPARATOR,
+            $name
+        );
 
         //create directory if it doesn't exist
         $this->makeDirectory($path);
+
+        //check if file already exists
+        if (File::exists($path)) {
+            $relativePath = Str::after($path, base_path());
+            $this->error(sprintf("%s already exists.", $relativePath));
+            return 1;
+        }
 
         //write stub to file
         File::put($path, $stub);
