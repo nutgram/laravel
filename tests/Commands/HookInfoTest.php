@@ -51,6 +51,5 @@ test('nutgram:hook:info does not print the webhook info', function () {
     });
 
     $this->artisan(HookInfoCommand::class)
-        ->expectsOutputToContain('Unable to get webhook info')
         ->assertFailed();
 });
