@@ -1,6 +1,11 @@
 <?php
 
+use Illuminate\Support\Facades\File;
 use Nutgram\Laravel\Console\MakeMiddlewareCommand;
+
+beforeEach(function () {
+    File::deleteDirectory(config('nutgram.namespace'));
+});
 
 test('nutgram:make:middleware makes a middleware', function () {
     $this->artisan(MakeMiddlewareCommand::class, ['name' => 'MyMiddleware'])

@@ -1,6 +1,11 @@
 <?php
 
+use Illuminate\Support\Facades\File;
 use Nutgram\Laravel\Console\MakeConversationCommand;
+
+beforeEach(function () {
+    File::deleteDirectory(config('nutgram.namespace'));
+});
 
 test('nutgram:make:conversation makes a conversation', function () {
     $this->artisan(MakeConversationCommand::class, ['name' => 'MyConversation'])
