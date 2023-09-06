@@ -5,13 +5,11 @@ namespace Nutgram\Laravel;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
-use Nutgram\Laravel\Console;
-use Nutgram\Laravel\Mixins;
+use Nutgram\Laravel\RunningMode\LaravelWebhook;
 use Psr\Log\LoggerInterface;
 use SergiX44\Nutgram\Configuration;
 use SergiX44\Nutgram\Nutgram;
 use SergiX44\Nutgram\RunningMode\Polling;
-use SergiX44\Nutgram\RunningMode\Webhook;
 use SergiX44\Nutgram\Telegram\Types\Media\File;
 use SergiX44\Nutgram\Testing\FakeNutgram;
 
@@ -57,10 +55,10 @@ class NutgramServiceProvider extends ServiceProvider
             if ($app->runningInConsole()) {
                 $bot->setRunningMode(Polling::class);
             } else {
-                $webhook = Webhook::class;
+                $webhook = LaravelWebhook::class;
                 if (config('nutgram.safe_mode', false)) {
                     // take into account the trust proxy Laravel configuration
-                    $webhook = new Webhook(fn () => $app->make('request')?->ip());
+                    $webhook = new LaravelWebhook(fn () => $app->make('request')?->ip());
                 }
 
                 $bot->setRunningMode($webhook);
