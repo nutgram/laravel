@@ -41,7 +41,8 @@ class NutgramServiceProvider extends ServiceProvider
                 logger: $app->get(LoggerInterface::class)->channel(config('nutgram.log_channel', 'null')),
                 localPathTransformer: config('nutgram.config.local_path_transformer'),
                 pollingTimeout: config('nutgram.config.polling.timeout', Configuration::DEFAULT_POLLING_TIMEOUT),
-                pollingAllowedUpdates: config('nutgram.config.polling.allowed_updates', Configuration::DEFAULT_ALLOWED_UPDATES),
+                pollingAllowedUpdates: config('nutgram.config.polling.allowed_updates',
+                    Configuration::DEFAULT_ALLOWED_UPDATES),
                 pollingLimit: config('nutgram.config.polling.limit', Configuration::DEFAULT_POLLING_LIMIT),
                 enableHttp2: config('nutgram.config.enable_http2', Configuration::DEFAULT_ENABLE_HTTP2),
             );
@@ -58,7 +59,10 @@ class NutgramServiceProvider extends ServiceProvider
                 $webhook = LaravelWebhook::class;
 
                 if (config('nutgram.safe_mode', false)) {
-                    $webhook = new LaravelWebhook(secretToken: md5(config('app.key')));
+                    $webhook = new LaravelWebhook(
+                        getToken: fn () => request()?->header('X-Telegram-Bot-Api-Secret-Token'),
+                        secretToken: md5(config('app.key'))
+                    );
                     $webhook->setSafeMode(true);
                 }
 
