@@ -39,6 +39,7 @@ class HookSetCommand extends Command
             url: $url,
             ip_address: $ip_address,
             max_connections: $max_connections,
+            secret_token: config('nutgram.safe_mode', false) ? md5(config('app.key')) : null
         );
 
         $this->info("Bot webhook set with url: $url");
