@@ -2,6 +2,18 @@
 
 All notable changes to `nutgram/laravel` will be documented in this file.
 
+## 1.1.0 - 2023-09-10
+
+### What's Changed
+
+- Add file existence check in nutgram:make:x command by @Lukasss93 in https://github.com/nutgram/laravel/pull/9
+- Move view loader inside console check in NutgramServiceProvider by @Lukasss93 in https://github.com/nutgram/laravel/pull/10
+- Fix for Laravel Octane by @Lukasss93 in https://github.com/nutgram/laravel/pull/11
+- Fix safe mode by @Lukasss93 in https://github.com/nutgram/laravel/pull/12
+- Add ValidateWebAppData middleware by @Lukasss93 in https://github.com/nutgram/laravel/pull/13
+
+**Full Changelog**: https://github.com/nutgram/laravel/compare/1.0.3...1.1.0
+
 ## 1.0.3 - 2023-07-17
 
 ### What's Changed
