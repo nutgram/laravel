@@ -8,28 +8,27 @@ use SergiX44\Nutgram\Testing\FakeNutgram;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 beforeEach(function () {
+    /** @var FakeNutgram $bot */
+    $this->bot = app(Nutgram::class);
     $this->request = new Request();
 });
 
 it('validates web app data', function () {
-    /** @var FakeNutgram $bot */
-    $bot = app(Nutgram::class);
-
     $this->request->merge([
-        'initData' => $bot->generateWebAppData([
+        'initData' => $this->bot->generateWebAppData([
             'foo' => 'bar',
             'auth_date' => time(),
         ])
     ]);
 
-    $middleware = new ValidateWebAppData();
+    $middleware = new ValidateWebAppData($this->bot);
     $middleware->handle($this->request, function ($request) {
-        expect($request->get('webapp'))->toBeInstanceOf(WebAppData::class);
+        expect($request->get('webAppData'))->toBeInstanceOf(WebAppData::class);
     });
 });
 
 it('fails to validate web app data', function () {
-    $middleware = new ValidateWebAppData();
+    $middleware = new ValidateWebAppData($this->bot);
     $middleware->handle($this->request, function ($request) {
     });
 })->throws(HttpException::class);
