@@ -32,3 +32,17 @@ it('fails to validate web app data', function () {
     $middleware->handle($this->request, function ($request) {
     });
 })->throws(HttpException::class);
+
+it('fails to validate web app data + custom action', function () {
+    $middleware = new class($this->bot) extends ValidateWebAppData {
+        protected function handleInvalidData(Request $request, Closure $next): mixed
+        {
+            $request->attributes->add(['webAppData' => null]);
+            return $next($request);
+        }
+    };
+
+    $middleware->handle($this->request, function ($request) {
+        expect($request->get('webAppData'))->toBeNull();
+    });
+});

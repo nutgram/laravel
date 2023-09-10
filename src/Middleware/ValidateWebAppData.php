@@ -13,7 +13,7 @@ class ValidateWebAppData
     {
     }
 
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): mixed
     {
         try {
             $initData = $request->input('initData', '');
@@ -22,11 +22,11 @@ class ValidateWebAppData
             $request->attributes->add(['webAppData' => $data]);
             return $next($request);
         } catch (InvalidDataException) {
-            $this->handleInvalidData($request, $next);
+            return $this->handleInvalidData($request, $next);
         }
     }
 
-    protected function handleInvalidData(Request $request, Closure $next): void
+    protected function handleInvalidData(Request $request, Closure $next): mixed
     {
         abort(403);
     }
