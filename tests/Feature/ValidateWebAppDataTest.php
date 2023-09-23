@@ -12,6 +12,7 @@ beforeEach(function () {
     /** @var FakeNutgram $bot */
     $this->bot = app(Nutgram::class);
     $this->request = new Request();
+    $this->app->bind('request', fn () => $this->request);
 });
 
 it('validates web app data', function () {
@@ -25,7 +26,7 @@ it('validates web app data', function () {
     $middleware = new ValidateWebAppData($this->bot);
     $middleware->handle($this->request, function ($request) {
         expect($request->get('webAppData'))->toBeInstanceOf(WebAppData::class);
-        expect(webAppData());
+        expect(webAppData())->toBeInstanceOf(WebAppData::class);
     });
 });
 
