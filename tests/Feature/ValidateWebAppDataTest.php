@@ -6,6 +6,7 @@ use SergiX44\Nutgram\Nutgram;
 use SergiX44\Nutgram\Telegram\Web\WebAppData;
 use SergiX44\Nutgram\Testing\FakeNutgram;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use function Nutgram\Laravel\Support\webAppData;
 
 beforeEach(function () {
     /** @var FakeNutgram $bot */
@@ -24,6 +25,7 @@ it('validates web app data', function () {
     $middleware = new ValidateWebAppData($this->bot);
     $middleware->handle($this->request, function ($request) {
         expect($request->get('webAppData'))->toBeInstanceOf(WebAppData::class);
+        expect(webAppData());
     });
 });
 

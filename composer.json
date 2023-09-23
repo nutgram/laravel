@@ -43,12 +43,18 @@
   "autoload": {
     "psr-4": {
       "Nutgram\\Laravel\\": "src/"
-    }
+    },
+    "files": [
+      "src/Support/Helpers.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
       "Nutgram\\Laravel\\Tests\\": "tests/"
-    }
+    },
+    "files": [
+      "src/Support/Helpers.php"
+    ]
   },
   "extra": {
     "laravel": {
