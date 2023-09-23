@@ -95,6 +95,7 @@ class NutgramServiceProvider extends ServiceProvider
                 Console\HookSetCommand::class,
                 Console\ListCommand::class,
                 Console\MakeCommandCommand::class,
+                Console\MakeExceptionCommand::class,
                 Console\MakeConversationCommand::class,
                 Console\MakeHandlerCommand::class,
                 Console\MakeMiddlewareCommand::class,

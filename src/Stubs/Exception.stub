@@ -1,0 +1,12 @@
+<?php
+
+namespace App\Telegram\{{ namespace }};
+
+use SergiX44\Nutgram\Exception\ApiException;
+use SergiX44\Nutgram\Nutgram;
+use SergiX44\Nutgram\Telegram\Exceptions\TelegramException;
+
+class {{ name }} extends ApiException
+{
+    public static ?string $pattern = '.*enter a string contained in the api error message.*';
+}
