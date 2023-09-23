@@ -2,6 +2,15 @@
 
 All notable changes to `nutgram/laravel` will be documented in this file.
 
+## 1.2.0 - 2023-09-23
+
+### What's Changed
+
+- Add MakeExceptionCommand for API exceptions by @Lukasss93 in https://github.com/nutgram/laravel/pull/14
+- Add webAppData() helper by @Lukasss93 in https://github.com/nutgram/laravel/pull/15
+
+**Full Changelog**: https://github.com/nutgram/laravel/compare/1.1.0...1.2.0
+
 ## 1.1.0 - 2023-09-10
 
 ### What's Changed
