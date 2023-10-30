@@ -30,7 +30,7 @@
   "require": {
     "php": "^8.2",
     "nunomaduro/termwind": "^1.15",
-    "nutgram/nutgram": "^4.6.0"
+    "nutgram/nutgram": "^4.11.0"
   },
   "require-dev": {
     "illuminate/testing": "^9.0|^10.0",
