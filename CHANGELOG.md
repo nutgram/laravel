@@ -2,6 +2,14 @@
 
 All notable changes to `nutgram/laravel` will be documented in this file.
 
+## 1.3.0 - 2023-10-31
+
+### What's Changed
+
+- Add a custom monolog formatter for Nutgram by @Lukasss93 in https://github.com/nutgram/laravel/pull/16
+
+**Full Changelog**: https://github.com/nutgram/laravel/compare/1.2.0...1.3.0
+
 ## 1.2.0 - 2023-09-23
 
 ### What's Changed
