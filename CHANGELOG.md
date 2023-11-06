@@ -2,6 +2,12 @@
 
 All notable changes to `nutgram/laravel` will be documented in this file.
 
+## 1.3.1 - 2023-11-06
+
+- Fix wrong registration for logging views
+
+**Full Changelog**: https://github.com/nutgram/laravel/compare/1.3.0...1.3.1
+
 ## 1.3.0 - 2023-10-31
 
 ### What's Changed
