@@ -10,7 +10,13 @@ class NutgramFormatter implements FormatterInterface
 {
     public function format(LogRecord $record): void
     {
-        $record->context['type'] === 'request' ? $this->formatRequest($record) : $this->formatResponse($record);
+        $type = $record->context['type'] ?? null;
+
+        if ($type === 'request') {
+            $this->formatRequest($record);
+        } elseif ($type === 'response') {
+            $this->formatResponse($record);
+        }
     }
 
     public function formatBatch(array $records): void
