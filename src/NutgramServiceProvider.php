@@ -26,7 +26,7 @@ class NutgramServiceProvider extends ServiceProvider
 
         $this->mergeConfigFrom(self::CONFIG_PATH, 'nutgram');
 
-        $this->app->singleton(Nutgram::class, function (Application $app) {
+        $this->app->bind(Nutgram::class, function (Application $app, array $params = []) {
             $configuration = new Configuration(
                 apiUrl: config('nutgram.config.api_url', Configuration::DEFAULT_API_URL),
                 botId: config('nutgram.config.bot_id'),
@@ -51,7 +51,12 @@ class NutgramServiceProvider extends ServiceProvider
                 return Nutgram::fake(config: $configuration);
             }
 
-            $bot = new Nutgram(config('nutgram.token') ?? FakeNutgram::TOKEN, $configuration);
+            $params['name'] ??= 'default';
+            $token = $params['token']
+                ?? config("nutgram.additional_bots.{$params['name']}.token")
+                ?? config('nutgram.token')
+                ?? FakeNutgram::TOKEN;
+            $bot = new Nutgram($token, $configuration);
 
             if ($app->runningInConsole()) {
                 $bot->setRunningMode(Polling::class);
@@ -69,12 +74,18 @@ class NutgramServiceProvider extends ServiceProvider
                 $bot->setRunningMode($webhook);
             }
 
+            if (config('nutgram.routes', false)) {
+                (function (Nutgram $bot) {
+                    require file_exists($this->telegramRoutes) ? $this->telegramRoutes : self::ROUTES_PATH;
+                })($bot);
+            }
+
             return $bot;
         });
 
         $this->app->alias(Nutgram::class, 'nutgram');
         $this->app->alias(Nutgram::class, FakeNutgram::class);
-        $this->app->singleton('telegram', fn (Application $app) => $app->get(Nutgram::class));
+        $this->app->alias(Nutgram::class, 'telegram');
 
         if (config('nutgram.mixins', false)) {
             Nutgram::mixin(new Mixins\NutgramMixin());
@@ -109,11 +120,6 @@ class NutgramServiceProvider extends ServiceProvider
                 self::CONFIG_PATH => config_path('nutgram.php'),
                 self::ROUTES_PATH => $this->telegramRoutes,
             ], 'nutgram');
-        }
-
-        if (config('nutgram.routes', false)) {
-            $bot = $this->app->get(Nutgram::class);
-            require file_exists($this->telegramRoutes) ? $this->telegramRoutes : self::ROUTES_PATH;
         }
     }
 }

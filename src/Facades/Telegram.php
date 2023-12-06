@@ -355,4 +355,11 @@ class Telegram extends Facade
     {
         static::swap(Nutgram::fake());
     }
+
+    public static function instance(string $name): Nutgram
+    {
+        $bot = app(self::getFacadeAccessor(), ['name' => $name]);
+        static::swap($bot);
+        return $bot;
+    }
 }

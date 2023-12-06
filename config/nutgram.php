@@ -22,4 +22,11 @@ return [
 
     // Set log channel
     'log_channel' => env('TELEGRAM_LOG_CHANNEL', 'null'),
+
+    // Additional tokens, allows to use multiple bots
+    'additional_bots' => [
+//        'another_bot' => [
+//            'token' => env('TELEGRAM_ANOTHER_BOT_TOKEN'),
+//        ],
+    ],
 ];
