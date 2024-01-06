@@ -7,7 +7,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use ReflectionProperty;
 use SergiX44\Nutgram\Handlers\Handler;
 use SergiX44\Nutgram\Handlers\Type\Command as NutgramCommand;
 use SergiX44\Nutgram\Nutgram;
@@ -39,9 +38,8 @@ class ListCommand extends Command
 
     protected function getHandlers(Nutgram $bot): Collection
     {
-        $refHandlers = new ReflectionProperty(Nutgram::class, "handlers");
-        $refHandlers->setAccessible(true);
-        return collect(Arr::dot($refHandlers->getValue($bot)));
+        $handlers = (fn () => $this->handlers)->call($bot);
+        return collect(Arr::dot($handlers));
     }
 
     protected function getHandlerName(string $signature, bool $isCommand = false): string
@@ -60,6 +58,8 @@ class ListCommand extends Command
             'edited_message' => 'onEditedMessage',
             'channel_post' => 'onChannelPost',
             'edited_channel_post' => 'onEditedChannelPost',
+            'message_reaction' => 'onMessageReaction',
+            'message_reaction_count' => 'onMessageReactionCount',
             'inline_query' => 'onInlineQuery',
             'chosen_inline_result' => 'onChosenInlineResult',
             'callback_query' => 'onCallbackQuery',
@@ -70,8 +70,13 @@ class ListCommand extends Command
             'my_chat_member' => 'onMyChatMember',
             'chat_member' => 'onChatMember',
             'chat_join_request' => 'onChatJoinRequest',
+            'chat_boost' => 'onChatBoost',
+            'removed_chat_boost' => 'onRemovedChatBoost',
             'api_error' => 'onApiError',
             'exception' => 'onException',
+            'fallback' => 'fallback',
+            'before_api_request' => 'beforeApiRequest',
+            'after_api_request' => 'afterApiRequest',
             default => 'unknown',
         };
     }
@@ -101,6 +106,7 @@ class ListCommand extends Command
             'poll' => 'onMessagePoll',
             'venue' => 'onVenue',
             'location' => 'onLocation',
+            'story' => 'onStory',
             'new_chat_members' => 'onNewChatMembers',
             'left_chat_member' => 'onLeftChatMember',
             'new_chat_title' => 'onNewChatTitle',
@@ -115,6 +121,8 @@ class ListCommand extends Command
             'pinned_message' => 'onPinnedMessage',
             'invoice' => 'onInvoice',
             'successful_payment' => 'onSuccessfulPayment',
+            'users_shared' => 'onUsersShared',
+            'chat_shared' => 'onChatShared',
             'connected_website' => 'onConnectedWebsite',
             'passport_data' => 'onPassportData',
             'proximity_alert_triggered' => 'onProximityAlertTriggered',
@@ -122,6 +130,10 @@ class ListCommand extends Command
             'forum_topic_edited' => 'onForumTopicEdited',
             'forum_topic_closed' => 'onForumTopicClosed',
             'forum_topic_reopened' => 'onForumTopicReopened',
+            'giveaway_created' => 'onGiveawayCreated',
+            'giveaway' => 'onGiveaway',
+            'giveaway_winners' => 'onGiveawayWinners',
+            'giveaway_completed' => 'onGiveawayCompleted',
             'video_chat_scheduled' => 'onVideoChatScheduled',
             'video_chat_started' => 'onVideoChatStarted',
             'video_chat_ended' => 'onVideoChatEnded',
@@ -134,9 +146,7 @@ class ListCommand extends Command
     protected function getCallableName(Handler $handler): string
     {
         // get callable value
-        $refCallable = new ReflectionProperty(Handler::class, "callable");
-        $refCallable->setAccessible(true);
-        $callable = $refCallable->getValue($handler);
+        $callable = (fn () => $this->callable)->call($handler);
 
         // parse callable
         if (is_string($callable)) {
