@@ -2,12 +2,13 @@
 
 use Mockery\MockInterface;
 use Nutgram\Laravel\Console\HookSetCommand;
+use SergiX44\Nutgram\Configuration;
 use SergiX44\Nutgram\Nutgram;
 
 test('nutgram:hook:set sets the bot webhook', function () {
     $this->mock(Nutgram::class, function (MockInterface $mock) {
         $mock->shouldReceive('setWebhook')
-            ->with('https://foo.bar/hook', null, null, 50, null, null, null)
+            ->with('https://foo.bar/hook', null, null, 50, Configuration::DEFAULT_ALLOWED_UPDATES, null, null)
             ->andReturn(0);
     });
 
@@ -27,7 +28,7 @@ test('nutgram:hook:set sets the bot webhook + safe mode', function () {
 
     $this->mock(Nutgram::class, function (MockInterface $mock) use ($hashedAppKey) {
         $mock->shouldReceive('setWebhook')
-            ->with('https://foo.bar/hook', null, null, 50, null, null, $hashedAppKey)
+            ->with('https://foo.bar/hook', null, null, 50, Configuration::DEFAULT_ALLOWED_UPDATES, null, $hashedAppKey)
             ->andReturn(0);
     });
 
