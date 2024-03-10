@@ -15,12 +15,15 @@ jobs:
                     -   laravel: 11.*
                         testbench: 9.*
                         termwind: 2.*
+                        pest: 2.*
                     -   laravel: 10.*
                         testbench: 8.*
                         termwind: 1.*
+                        pest: 1.*
                     -   laravel: 9.*
                         testbench: 7.*
                         termwind: 1.*
+                        pest: 1.*
 
         name: PHP ${{ matrix.php }} + Laravel ${{ matrix.laravel }}
         steps:
@@ -38,7 +41,7 @@ jobs:
             -   name: Install dependencies
                 run: |
                     composer require "laravel/framework:${{ matrix.laravel }}" "nunomaduro/termwind:${{ matrix.termwind }}" --no-interaction --no-update
-                    composer require "orchestra/testbench:${{ matrix.testbench }}" --dev --no-interaction --no-update
+                    composer require "orchestra/testbench:${{ matrix.testbench }}" "pestphp/pest:${{ matrix.pest }}" "pestphp/pest-plugin-mock":${{ matrix.pest }}" --dev --no-interaction --no-update
                     composer update --prefer-dist --no-interaction
 
             -   name: Run test suite
