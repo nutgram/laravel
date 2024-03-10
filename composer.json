@@ -29,7 +29,7 @@
   "prefer-stable": true,
   "require": {
     "php": "^8.2",
-    "nunomaduro/termwind": "^2.0",
+    "nunomaduro/termwind": "^1.0|^2.0",
     "nutgram/nutgram": "^4.11.0"
   },
   "require-dev": {
