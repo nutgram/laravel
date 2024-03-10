@@ -36,8 +36,8 @@ class MixinUtils
             $path .= basename($file->file_path ?? $file->file_id);
         }
 
-        if ($bot->getConfig()->is_local ?? false) {
-            return $storage->put($path, $bot->downloadUrl($file));
+        if ($bot->getConfig()->isLocal ?? false) {
+            return copy(from: $bot->downloadUrl($file), to: $storage->path($path));
         }
 
         //create temp file
