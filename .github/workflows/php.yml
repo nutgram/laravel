@@ -11,7 +11,6 @@ jobs:
             matrix:
                 php: [ 8.2, 8.3 ]
                 laravel: [9.*, 10.*, 11.*]
-                dependency-version: [prefer-lowest, prefer-stable]
                 include:
                     -   laravel: 11.*
                         testbench: 9.*
@@ -20,7 +19,7 @@ jobs:
                     -   laravel: 9.*
                         testbench: 7.*
 
-        name: PHP ${{ matrix.php }} + Laravel ${{ matrix.laravel }} | ${{ matrix.dependency-version }}
+        name: PHP ${{ matrix.php }} + Laravel ${{ matrix.laravel }}
         steps:
             -   uses: actions/checkout@v2
 
@@ -45,8 +44,8 @@ jobs:
             -   name: Install dependencies
                 if: steps.composer-cache.outputs.cache-hit != 'true'
                 run: |
-                    composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-update --no-progress
-                    composer update --${{ matrix.dependency-version }} --prefer-dist --no-progress
+                    composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+                    composer update --prefer-dist --no-interaction --no-suggest
 
             -   name: Run test suite
                 run: composer run-script test
