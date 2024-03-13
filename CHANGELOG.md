@@ -2,6 +2,23 @@
 
 All notable changes to `nutgram/laravel` will be documented in this file.
 
+## 1.4.0 - 2024-03-13
+
+### What's Changed
+
+* Fix for missing type by @Lukasss93 in https://github.com/nutgram/laravel/pull/17
+* Refactor by @Lukasss93 in https://github.com/nutgram/laravel/pull/19
+* Make It Ready For Laravel 11 by @Hesammousavi in https://github.com/nutgram/laravel/pull/20
+* Fix saveFileToDisk() method by @sr-44 in https://github.com/nutgram/laravel/pull/23
+* Fix dependencies for Laravel 11 support by @Lukasss93 in https://github.com/nutgram/laravel/pull/21
+
+### New Contributors
+
+* @Hesammousavi made their first contribution in https://github.com/nutgram/laravel/pull/20
+* @sr-44 made their first contribution in https://github.com/nutgram/laravel/pull/23
+
+**Full Changelog**: https://github.com/nutgram/laravel/compare/1.3.1...1.4.0
+
 ## 1.3.1 - 2023-11-06
 
 - Fix wrong registration for logging views
