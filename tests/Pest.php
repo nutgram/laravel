@@ -27,7 +27,7 @@ uses(TestCase::class)->in(__DIR__);
 |
 */
 
-expect()->extend('getFileContent', fn () => $this->and(File::get($this->value)));
+expect()->extend('getFileContent', fn () => $this->and($this->value = File::get($this->value)));
 
 /*
 |--------------------------------------------------------------------------
