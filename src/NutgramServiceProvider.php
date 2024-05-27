@@ -73,6 +73,14 @@ class NutgramServiceProvider extends ServiceProvider
             return $bot;
         });
 
+        $this->app->resolving(Nutgram::class, function (Nutgram $bot, Application $app) {
+            if (config('nutgram.routes', false) && !$app->resolved($bot::class)) {
+                (function () use ($bot) {
+                    require file_exists($this->telegramRoutes) ? $this->telegramRoutes : self::ROUTES_PATH;
+                })();
+            }
+        });
+
         $this->app->alias(Nutgram::class, 'nutgram');
         $this->app->alias(Nutgram::class, FakeNutgram::class);
         $this->app->singleton('telegram', fn (Application $app) => $app->get(Nutgram::class));
@@ -110,11 +118,6 @@ class NutgramServiceProvider extends ServiceProvider
                 self::CONFIG_PATH => config_path('nutgram.php'),
                 self::ROUTES_PATH => $this->telegramRoutes,
             ], 'nutgram');
-        }
-
-        if (config('nutgram.routes', false)) {
-            $bot = $this->app->get(Nutgram::class);
-            require file_exists($this->telegramRoutes) ? $this->telegramRoutes : self::ROUTES_PATH;
         }
     }
 }
