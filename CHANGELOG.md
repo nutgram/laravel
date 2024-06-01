@@ -2,6 +2,12 @@
 
 All notable changes to `nutgram/laravel` will be documented in this file.
 
+## 1.4.1 - 2024-06-01
+
+- Reduce bundle size
+
+**Full Changelog**: https://github.com/nutgram/laravel/compare/1.4.0...1.4.1
+
 ## 1.4.0 - 2024-03-13
 
 ### What's Changed
