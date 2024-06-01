@@ -3,7 +3,6 @@
 namespace Nutgram\Laravel\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\App;
 use SergiX44\Nutgram\Nutgram;
 use SergiX44\Nutgram\RunningMode\SingleUpdate;
 
@@ -17,8 +16,8 @@ class ListenCommand extends Command
     {
         $this->info('Listening...');
         while (true) {
-            $app = App::configure(base_path())->create();
-            $bot = $app->make(Nutgram::class);
+            app()->forgetInstance(Nutgram::class);
+            $bot = app(Nutgram::class);
             $bot->setRunningMode(SingleUpdate::class);
             $bot->run();
         }
