@@ -15,6 +15,7 @@ class ListenCommand extends Command
 
     public function handle(): void
     {
+        $this->info('Listening...');
         while (true) {
             $app = App::configure(base_path())->create();
             $bot = $app->make(Nutgram::class);
