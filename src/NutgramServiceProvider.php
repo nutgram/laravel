@@ -99,6 +99,7 @@ class NutgramServiceProvider extends ServiceProvider
 
             $this->commands([
                 Console\RunCommand::class,
+                Console\ListenCommand::class,
                 Console\RegisterCommandsCommand::class,
                 Console\HookInfoCommand::class,
                 Console\HookRemoveCommand::class,
