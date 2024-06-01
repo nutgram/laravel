@@ -73,7 +73,7 @@ class NutgramServiceProvider extends ServiceProvider
         });
 
         $this->app->resolving(Nutgram::class, function (Nutgram $bot, Application $app) {
-            if (config('nutgram.routes', false) && !$app->resolved($bot::class)) {
+            if (config('nutgram.routes', false)) {
                 (function () use ($bot) {
                     require file_exists($this->telegramRoutes) ? $this->telegramRoutes : self::ROUTES_PATH;
                 })();
