@@ -45,6 +45,7 @@ class NutgramServiceProvider extends ServiceProvider
                     Configuration::DEFAULT_ALLOWED_UPDATES),
                 pollingLimit: config('nutgram.config.polling.limit', Configuration::DEFAULT_POLLING_LIMIT),
                 enableHttp2: config('nutgram.config.enable_http2', Configuration::DEFAULT_ENABLE_HTTP2),
+                conversationTtl: config('nutgram.config.conversation_ttl', Configuration::DEFAULT_CONVERSATION_TTL)
             );
 
             if ($app->runningUnitTests()) {
