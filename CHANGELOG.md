@@ -2,6 +2,18 @@
 
 All notable changes to `nutgram/laravel` will be documented in this file.
 
+## 1.4.2 - 2024-08-05
+
+### What's Changed
+
+* Add conversation ttl to laravel service provider by @iwex in https://github.com/nutgram/laravel/pull/25
+
+### New Contributors
+
+* @iwex made their first contribution in https://github.com/nutgram/laravel/pull/25
+
+**Full Changelog**: https://github.com/nutgram/laravel/compare/1.4.1...1.4.2
+
 ## 1.4.1 - 2024-06-01
 
 - Reduce bundle size
