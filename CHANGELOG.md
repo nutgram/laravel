@@ -2,6 +2,14 @@
 
 All notable changes to `nutgram/laravel` will be documented in this file.
 
+## 1.4.3 - 2024-10-08
+
+### What's Changed
+
+* Fix possible infinite loop + chat_id validation by @Lukasss93 in https://github.com/nutgram/laravel/pull/26
+
+**Full Changelog**: https://github.com/nutgram/laravel/compare/1.4.2...1.4.3
+
 ## 1.4.2 - 2024-08-05
 
 ### What's Changed
