@@ -2,24 +2,23 @@
 
 namespace Nutgram\Laravel\Log;
 
+use InvalidArgumentException;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
 use Monolog\LogRecord;
 use SergiX44\Nutgram\Nutgram;
+use SergiX44\Nutgram\Telegram\Properties\ParseMode;
 
 class LoggerHandler extends AbstractProcessingHandler
 {
-    protected Nutgram $bot;
-
-    protected string|int $chatId;
+    protected string|int|null $chatId;
 
     public function __construct(array $config)
     {
-        parent::__construct(Logger::toMonologLevel($config['level']), true);
+        parent::__construct(Logger::toMonologLevel($config['level']));
 
-        $this->bot = app(Nutgram::class);
         $this->chatId = $config['chat_id'];
     }
 
@@ -30,10 +29,14 @@ class LoggerHandler extends AbstractProcessingHandler
 
     protected function write(LogRecord $record): void
     {
-        $this->bot->sendChunkedMessage(
+        if ($this->chatId === null) {
+            throw new InvalidArgumentException('You must specify a chat_id via the NUTGRAM_LOG_CHAT_ID environment variable.');
+        }
+
+        app(Nutgram::class)->sendChunkedMessage(
             text: $this->formatText($record),
             chat_id: $this->chatId,
-            parse_mode: 'html',
+            parse_mode: ParseMode::HTML,
         );
     }
 
@@ -42,9 +45,9 @@ class LoggerHandler extends AbstractProcessingHandler
         return sprintf(
             "<b>%s %s</b> (%s):\n<pre>%s</pre>",
             config('app.name'),
-            $record['level_name'],
+            $record->level->getName(),
             config('app.env'),
-            $record['formatted']
+            $record->formatted ?? '',
         );
     }
 }
