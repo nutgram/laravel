@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <psalm
         errorLevel="8"
+        ensureOverrideAttribute="false"
+        findUnusedCode="false"
         resolveFromConfigFile="true"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="https://getpsalm.org/schema/config"
@@ -18,21 +20,6 @@
                 <directory name="src"/>
             </errorLevel>
         </PropertyNotSetInConstructor>
-        <InvalidThrow>
-            <errorLevel type="suppress">
-                <referencedClass name="Psr\SimpleCache\InvalidArgumentException"/>
-            </errorLevel>
-        </InvalidThrow>
-        <UndefinedMethod>
-            <errorLevel type="suppress">
-                <referencedMethod name="ReflectionType::getName"/>
-            </errorLevel>
-        </UndefinedMethod>
-        <PossiblyNullPropertyAssignmentValue>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </PossiblyNullPropertyAssignmentValue>
         <UndefinedInterfaceMethod>
             <errorLevel type="suppress">
                 <referencedMethod name="Psr\Container\ContainerInterface::getNew"/>
@@ -43,10 +30,5 @@
                 <referencedMethod name="Illuminate\Contracts\Filesystem\Filesystem::putFileAs"/>
             </errorLevel>
         </UndefinedInterfaceMethod>
-        <InvalidScope>
-            <errorLevel type="suppress">
-                <directory name="tests/"/>
-            </errorLevel>
-        </InvalidScope>
     </issueHandlers>
 </psalm>
