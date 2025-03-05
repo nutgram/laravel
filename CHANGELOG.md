@@ -2,6 +2,14 @@
 
 All notable changes to `nutgram/laravel` will be documented in this file.
 
+## 1.5.0 - 2025-03-05
+
+### What's Changed
+
+* Update PHP and Laravel versions in CI configuration by @Lukasss93 in https://github.com/nutgram/laravel/pull/27
+
+**Full Changelog**: https://github.com/nutgram/laravel/compare/1.4.3...1.5.0
+
 ## 1.4.3 - 2024-10-08
 
 ### What's Changed
