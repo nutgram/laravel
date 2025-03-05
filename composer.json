@@ -33,11 +33,10 @@
     "nutgram/nutgram": "^4.17.0"
   },
   "require-dev": {
-    "illuminate/testing": "^9.52.17|^10.48.23|^11.44.1|^12.1.1",
+    "illuminate/testing": "^9.0|^10.0|^11.0|^12.0",
     "orchestra/testbench": "^7.0|^8.0|^9.0|^10.0",
     "pestphp/pest": "^1.1|^2.0|^3.0",
-    "pestphp/pest-plugin-mock": "^1.0|^2.0|^3.0",
-    "roave/security-advisories": "dev-latest",
+    "pestphp/pest-plugin-mock": "^1.0|^2.0",
     "vimeo/psalm": "^6.0"
   },
   "autoload": {
