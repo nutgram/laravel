@@ -45,7 +45,7 @@ jobs:
             -   name: Install dependencies
                 run: |
                     composer require "laravel/framework:${{ matrix.laravel }}" "nunomaduro/termwind:${{ matrix.termwind }}" --no-interaction --no-update
-                    composer require "orchestra/testbench:${{ matrix.testbench }}" "pestphp/pest:${{ matrix.pest }}" "pestphp/pest-plugin-mock:${{ matrix.pest }}" --dev --no-interaction --no-update
+                    composer require "orchestra/testbench:${{ matrix.testbench }}" "pestphp/pest:${{ matrix.pest }}" --dev --no-interaction --no-update
                     composer update --prefer-dist --no-interaction
 
             -   name: Run test suite
