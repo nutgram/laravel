@@ -27,6 +27,7 @@
             <file>./src/Console/RunCommand.php</file>
             <file>./src/Console/BaseMakeCommand.php</file>
             <file>./src/Mixins/MixinUtils.php</file>
+            <file>./src/RunningMode/LaravelWebhook.php</file>
         </exclude>
     </source>
 </phpunit>
