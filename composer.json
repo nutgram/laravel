@@ -36,7 +36,6 @@
     "illuminate/testing": "^9.0|^10.0|^11.0|^12.0",
     "orchestra/testbench": "^7.0|^8.0|^9.0|^10.0",
     "pestphp/pest": "^1.1|^2.0|^3.0",
-    "pestphp/pest-plugin-mock": "^1.0|^2.0",
     "vimeo/psalm": "^6.0"
   },
   "autoload": {
