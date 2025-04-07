@@ -22,4 +22,18 @@ return [
 
     // Set log channel
     'log_channel' => env('TELEGRAM_LOG_CHANNEL', 'null'),
+
+    // Watch configs used by the "nutgram:run --watch" command
+    'watch' => [
+        // PHP binary to use
+        'bin' => PHP_BINARY,
+
+        // Interval in microseconds to check for changes
+        'interval' => 250 * 1000,
+
+        // Paths to watch
+        'paths' => [
+            app_path('Telegram'),
+        ]
+    ],
 ];
