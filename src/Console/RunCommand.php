@@ -56,7 +56,5 @@ class RunCommand extends Command
                 $this->output->write($output);
             }
         );
-
-        $this->output->write($this->watchProcess->output());
     }
 }
