@@ -3,8 +3,8 @@
 namespace Nutgram\Laravel\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Process\InvokedProcess;
-use Illuminate\Support\Facades\Process;
+use Symfony\Component\Process\PhpSubprocess;
+use Symfony\Component\Process\Process;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use SergiX44\Nutgram\Nutgram;
@@ -12,49 +12,85 @@ use Spatie\Watcher\Watch;
 
 class RunCommand extends Command
 {
-    protected $signature = 'nutgram:run {--watch : Watch for changes and restart the bot}';
+    protected $signature = 'nutgram:run {--watch : Watch for changes and restart the bot}
+                                        {--without-tty : Disable output to TTY}';
 
     protected $description = 'Start the bot in long polling mode';
 
-    protected ?InvokedProcess $watchProcess = null;
+    protected ?Process $runProcess = null;
 
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function handle(Nutgram $bot): void
+    public function handle(Nutgram $bot): int
     {
-        if ($this->option('watch')) {
-            $this->watch();
+        if (!$this->option('watch')) {
+            $bot->run();
 
-            return;
+            return Command::SUCCESS;
         }
 
-        $bot->run();
-    }
-
-    protected function watch(): void
-    {
         $this->info('Watching for changes...');
-        $this->startWatchProcess();
 
-        Watch::paths(...config('nutgram.watch.paths', []))
-            ->setIntervalTime(config('nutgram.watch.interval', 250 * 1000))
-            ->onAnyChange(function () {
-                $this->warn('Restarting the bot...');
-                $this->watchProcess?->stop();
-                $this->startWatchProcess();
-            })
-            ->start();
+        if(!$this->startAsyncRun()){
+            return Command::FAILURE;
+        }
+
+        $this->listenForChanges();
+
+        return Command::SUCCESS;
     }
 
-    protected function startWatchProcess(): void
+    protected function startAsyncRun(): bool
     {
-        $this->watchProcess = Process::tty(Process::supportsTty())->start(
-            command: config('nutgram.watch.bin', PHP_BINARY).' artisan nutgram:run',
-            output: function (string $type, string $output) {
+        $this->runProcess = (new PhpSubprocess(['artisan', 'nutgram:run', '--ansi']))
+            ->setTty(Process::isTtySupported() && !$this->option('without-tty'))
+            ->setTimeout(null);
+
+        $this->runProcess->start(function (string $type, string $output) {
+            if(Process::isTtySupported() && !$this->option('without-tty')) {
                 $this->output->write($output);
             }
-        );
+        });
+
+        sleep(1);
+
+        return ! $this->runProcess->isTerminated();
+    }
+
+    protected function listenForChanges(): self
+    {
+        Watch::paths(...config('nutgram.watch_paths', []))
+            ->setIntervalTime(200 * 1000)
+            ->onAnyChange(function (string $event, string $path) {
+                if ($this->isPhpFile($path)) {
+                    $this->restartAsyncRun();
+                }
+            })
+            ->start();
+
+        return $this;
+    }
+
+    protected function isPhpFile(string $path): bool
+    {
+        return str_ends_with(strtolower($path), '.php');
+    }
+
+    protected function restartAsyncRun(): self
+    {
+        $this->components->info('Change detected! Restarting bot...');
+
+        $this->runProcess->stop();
+        $this->runProcess->wait(function (string $type, string $output) {
+            if(Process::isTtySupported() && !$this->option('without-tty')) {
+                $this->output->write($output);
+            }
+        });
+
+        $this->startAsyncRun();
+
+        return $this;
     }
 }
