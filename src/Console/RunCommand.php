@@ -80,14 +80,10 @@ class RunCommand extends Command
 
     protected function restartAsyncRun(): self
     {
-        $this->components->info('Change detected! Restarting bot...');
+        $this->components->info('Changes detected! Restarting bot...');
 
         $this->runProcess->stop();
-        $this->runProcess->wait(function (string $type, string $output) {
-            if(Process::isTtySupported() && !$this->option('without-tty')) {
-                $this->output->write($output);
-            }
-        });
+        $this->runProcess->wait();
 
         $this->startAsyncRun();
 
