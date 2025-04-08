@@ -50,7 +50,7 @@ class RunCommand extends Command
 
     protected function startWatchProcess(): void
     {
-        $this->watchProcess = Process::start(
+        $this->watchProcess = Process::tty(Process::supportsTty())->start(
             command: config('nutgram.watch.bin', PHP_BINARY).' artisan nutgram:run',
             output: function (string $type, string $output) {
                 $this->output->write($output);
