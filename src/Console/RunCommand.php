@@ -54,8 +54,6 @@ class RunCommand extends Command
             }
         });
 
-        sleep(1);
-
         return ! $this->runProcess->isTerminated();
     }
 
