@@ -23,8 +23,17 @@ return [
     // Set log channel
     'log_channel' => env('TELEGRAM_LOG_CHANNEL', 'null'),
 
-    // Watch paths used by the "nutgram:run --watch" command
-    'watch_paths' => [
-        app_path('Telegram'),
+    // Watch options used by the "nutgram:run --watch" command
+    'watch' => [
+
+        // The paths to watch for changes
+        'paths' => [
+            app_path('Telegram'),
+        ],
+
+        // The extensions to watch for changes
+        'extensions' => [
+            'php',
+        ],
     ],
 ];

@@ -33,7 +33,7 @@ class RunCommand extends Command
 
         $this->info('Watching for changes...');
 
-        if(!$this->startAsyncRun()){
+        if (!$this->startAsyncRun()) {
             return Command::FAILURE;
         }
 
@@ -49,20 +49,20 @@ class RunCommand extends Command
             ->setTimeout(null);
 
         $this->runProcess->start(function (string $type, string $output) {
-            if(Process::isTtySupported() && !$this->option('without-tty')) {
+            if (Process::isTtySupported() && !$this->option('without-tty')) {
                 $this->output->write($output);
             }
         });
 
-        return ! $this->runProcess->isTerminated();
+        return !$this->runProcess->isTerminated();
     }
 
     protected function listenForChanges(): self
     {
-        Watch::paths(...config('nutgram.watch_paths', []))
+        Watch::paths(...config('nutgram.watch.paths', []))
             ->setIntervalTime(200 * 1000)
             ->onAnyChange(function (string $event, string $path) {
-                if ($this->isPhpFile($path)) {
+                if ($this->hasValidExtension($path)) {
                     $this->restartAsyncRun();
                 }
             })
@@ -71,9 +71,11 @@ class RunCommand extends Command
         return $this;
     }
 
-    protected function isPhpFile(string $path): bool
+    protected function hasValidExtension(string $path): bool
     {
-        return str_ends_with(strtolower($path), '.php');
+        return collect(config('nutgram.watch.extensions', ['php']))
+            ->map(fn (string $ext) => sprintf(".%s", strtolower($ext)))
+            ->contains(fn (string $ext) => str_ends_with(strtolower($path), $ext));
     }
 
     protected function restartAsyncRun(): self
