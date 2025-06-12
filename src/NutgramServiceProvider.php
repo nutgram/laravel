@@ -82,8 +82,8 @@ class NutgramServiceProvider extends ServiceProvider
         });
 
         $this->app->alias(Nutgram::class, 'nutgram');
+        $this->app->alias(Nutgram::class, 'telegram');
         $this->app->alias(Nutgram::class, FakeNutgram::class);
-        $this->app->singleton('telegram', fn (Application $app) => $app->get(Nutgram::class));
 
         if (config('nutgram.mixins', false)) {
             Nutgram::mixin(new Mixins\NutgramMixin());
