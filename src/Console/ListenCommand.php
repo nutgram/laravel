@@ -3,8 +3,9 @@
 namespace Nutgram\Laravel\Console;
 
 use Illuminate\Console\Command;
-use SergiX44\Nutgram\Nutgram;
-use SergiX44\Nutgram\RunningMode\SingleUpdate;
+use Illuminate\Support\Facades\Process;
+use function Illuminate\Support\artisan_binary;
+use function Orchestra\Testbench\php_binary;
 
 class ListenCommand extends Command
 {
@@ -16,15 +17,16 @@ class ListenCommand extends Command
     {
         $this->warn('This running mode is very inefficient and only suitable for development purposes. DO NOT USE IN PRODUCTION!');
         $this->info('Listening...');
-        config()?->set('nutgram.config.polling.timeout', $this->option('pollingTimeout'));
         while (true) {
-            if (function_exists('opcache_reset')) {
-                opcache_reset();
+            $result = Process::run([
+                php_binary(), artisan_binary(), 'nutgram:run', '--once',
+                '--pollingTimeout='.$this->option('pollingTimeout'),
+            ]);
+            if ($result->exitCode() !== 0) {
+                $this->line($result->output());
+                $this->error($result->errorOutput());
+                break;
             }
-            app()->forgetInstance(Nutgram::class);
-            $bot = app(Nutgram::class);
-            $bot->setRunningMode(SingleUpdate::class);
-            $bot->run();
         }
     }
 }
