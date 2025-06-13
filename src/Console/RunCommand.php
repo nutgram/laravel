@@ -22,7 +22,6 @@ class RunCommand extends Command
     {
         if ($pollingTimeout = $this->option('pollingTimeout')) {
             config()?->set('nutgram.config.polling.timeout', (int)$pollingTimeout);
-            $this->info("Polling set to {$pollingTimeout} seconds.");
         }
 
         if ($this->option('once')) {
