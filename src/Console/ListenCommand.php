@@ -18,13 +18,14 @@ class ListenCommand extends Command
         $this->warn('This running mode is very inefficient and only suitable for development purposes. DO NOT USE IN PRODUCTION!');
         $this->info('Listening...');
         while (true) {
-            $result = Process::run([
+            $result = Process::start([
                 php_binary(), artisan_binary(), 'nutgram:run', '--once',
                 '--pollingTimeout='.$this->option('pollingTimeout'),
-            ]);
+            ], function (string $type, string $output) {
+                $this->output->write($output);
+            })->wait();
             if ($result->exitCode() !== 0) {
-                $this->line($result->output());
-                $this->error($result->errorOutput());
+                $this->error('An error occurred while running the bot. Exiting...');
                 break;
             }
         }
