@@ -5,7 +5,7 @@ namespace Nutgram\Laravel\Console;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Process;
 use function Illuminate\Support\artisan_binary;
-use function Orchestra\Testbench\php_binary;
+use function Illuminate\Support\php_binary;
 
 class ListenCommand extends Command
 {
