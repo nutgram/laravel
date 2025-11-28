@@ -8,8 +8,8 @@
 [![Nutgram](https://img.shields.io/packagist/dependency-v/nutgram/laravel/nutgram/nutgram?logo=telegram&label=nutgram)](https://github.com/nutgram/nutgram)
 
 ![Tests](https://img.shields.io/github/actions/workflow/status/nutgram/laravel/php.yml?label=Test%20Suite&logo=github)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/feaa33a8d1431d16998d/test_coverage)](https://codeclimate.com/github/nutgram/laravel/test_coverage)
-[![Maintainability](https://api.codeclimate.com/v1/badges/feaa33a8d1431d16998d/maintainability)](https://codeclimate.com/github/nutgram/laravel/maintainability)
+[![Code Coverage](https://qlty.sh/gh/nutgram/projects/laravel/coverage.svg)](https://qlty.sh/gh/nutgram/projects/laravel)
+[![Maintainability](https://qlty.sh/gh/nutgram/projects/laravel/maintainability.svg)](https://qlty.sh/gh/nutgram/projects/laravel)
 
 [Nutgram](https://github.com/nutgram/nutgram) Package for Laravel 9.0+.
 
