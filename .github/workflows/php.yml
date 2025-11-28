@@ -19,15 +19,15 @@ jobs:
                     -   laravel: 11.*
                         testbench: 9.*
                         termwind: 2.*
-                        pest: 2.*
+                        pest: 3.*
                     -   laravel: 10.*
                         testbench: 8.*
                         termwind: 1.*
-                        pest: 1.*
+                        pest: 3.*
                     -   laravel: 9.*
                         testbench: 7.*
                         termwind: 1.*
-                        pest: 1.*
+                        pest: 3.*
 
         name: PHP ${{ matrix.php }} + Laravel ${{ matrix.laravel }}
         steps:
