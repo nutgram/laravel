@@ -9,29 +9,21 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [ 8.2, 8.3, 8.4 ]
+                php: [ 8.2, 8.3, 8.4, 8.5 ]
                 laravel: [ 9.*, 10.*, 11.*, 12.* ]
                 include:
                     -   laravel: 12.*
                         testbench: 10.*
-                        termwind: 2.*
-                        pest: 3.*
                     -   laravel: 11.*
                         testbench: 9.*
-                        termwind: 2.*
-                        pest: 2.*
                     -   laravel: 10.*
                         testbench: 8.*
-                        termwind: 1.*
-                        pest: 1.*
                     -   laravel: 9.*
                         testbench: 7.*
-                        termwind: 1.*
-                        pest: 1.*
 
         name: PHP ${{ matrix.php }} + Laravel ${{ matrix.laravel }}
         steps:
-            -   uses: actions/checkout@v4
+            -   uses: actions/checkout@v6
 
             -   name: Setup PHP
                 uses: shivammathur/setup-php@v2
@@ -44,8 +36,8 @@ jobs:
 
             -   name: Install dependencies
                 run: |
-                    composer require "laravel/framework:${{ matrix.laravel }}" "nunomaduro/termwind:${{ matrix.termwind }}" --no-interaction --no-update
-                    composer require "orchestra/testbench:${{ matrix.testbench }}" "pestphp/pest:${{ matrix.pest }}" --dev --no-interaction --no-update
+                    composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
+                    composer require "orchestra/testbench:${{ matrix.testbench }}" --dev --no-interaction --no-update
                     composer update --prefer-dist --no-interaction
 
             -   name: Run test suite
@@ -55,7 +47,7 @@ jobs:
         needs: [ tests ]
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v4
+            -   uses: actions/checkout@v6
             -   name: Setup PHP
                 uses: shivammathur/setup-php@v2
                 with:
@@ -79,17 +71,19 @@ jobs:
                 run: composer install --prefer-dist --no-interaction --no-suggest
 
             -   name: Run test suite
-                uses: paambaati/codeclimate-action@v9
-                env:
-                    CC_TEST_REPORTER_ID: ${{ secrets.CC_REPORTER_ID }}
+                run: composer run-script test-coverage
+
+            -   name: Upload Coverage
+                uses: qltysh/qlty-action/coverage@v2
                 with:
-                    coverageCommand: composer run-script test-coverage
-                    coverageLocations: ${{github.workspace}}/coverage.xml:clover
+                    token: ${{ secrets.COVERAGE_TOKEN }}
+                    files: ${{github.workspace}}/coverage.xml
+                    format: clover
     static-analysis:
         runs-on: ubuntu-latest
         name: Psalm
         steps:
-            -   uses: actions/checkout@v4
+            -   uses: actions/checkout@v6
 
             -   name: Setup PHP
                 uses: shivammathur/setup-php@v2
