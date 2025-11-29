@@ -2,6 +2,19 @@
 
 All notable changes to `nutgram/laravel` will be documented in this file.
 
+## 1.6.0 - 2025-11-29
+
+### What's Changed
+
+* Listen command by @sergix44 in https://github.com/nutgram/laravel/pull/29
+* PHP 8.5 Compatibility by @Lukasss93 in https://github.com/nutgram/laravel/pull/30
+
+### New Contributors
+
+* @sergix44 made their first contribution in https://github.com/nutgram/laravel/pull/29
+
+**Full Changelog**: https://github.com/nutgram/laravel/compare/1.5.0...1.5.1
+
 ## 1.5.0 - 2025-03-05
 
 ### What's Changed
