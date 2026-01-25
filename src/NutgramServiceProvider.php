@@ -36,7 +36,6 @@ class NutgramServiceProvider extends ServiceProvider
                 clientTimeout: config('nutgram.config.timeout', Configuration::DEFAULT_CLIENT_TIMEOUT),
                 clientOptions: config('nutgram.config.client', []),
                 container: $app,
-                hydrator: config('nutgram.config.hydrator', Configuration::DEFAULT_HYDRATOR),
                 cache: $app->get(Cache::class),
                 logger: $app->get(LoggerInterface::class)->channel(config('nutgram.log_channel', 'null')),
                 localPathTransformer: config('nutgram.config.local_path_transformer'),
