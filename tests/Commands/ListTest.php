@@ -73,3 +73,18 @@ test('nutgram:list with handler registered', function () {
         ->doesntExpectOutput('No handlers have been registered.')
         ->assertSuccessful();
 });
+
+test('nutgram:list with --json flag', function(){
+    $bot = Nutgram::fake();
+
+    $bot->onCommand('start', static function () {});
+
+    $jsonOutput = [
+        ['handler' => 'onCommand', 'pattern' => '/start', 'callable' => 'closure'],
+    ];
+
+    $this
+        ->artisan(ListCommand::class, ['--json' => true])
+        ->expectsOutputToContain(json_encode($jsonOutput))
+        ->assertSuccessful();
+});
