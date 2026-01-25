@@ -13,6 +13,6 @@ test('nutgram:register-commands registers the bot commands', function () {
     })->description('help command');
 
     $this->artisan(RegisterCommandsCommand::class)
-        ->expectsOutput('Bot commands set.')
+        ->expectsOutputToContain('Bot commands set.')
         ->assertSuccessful();
 });

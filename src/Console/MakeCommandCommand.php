@@ -9,20 +9,28 @@ class MakeCommandCommand extends BaseMakeCommand
     protected $description = 'Create a new Nutgram Command';
 
     /**
-     * Return the sub directory name
-     * @return string
+     * @inheritDoc
      */
-    protected function getSubDirName():string
+    protected function getSubDirName(): string
     {
         return 'Commands';
     }
 
     /**
-     * Return the stub file path
-     * @return string
+     * @inheritDoc
      */
     protected function getStubPath(): string
     {
         return __DIR__.'/../Stubs/Command.stub';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function promptForMissingArgumentsUsing(): array
+    {
+        return [
+            'name' => ['Please provide the Command name:', 'E.g. StartCommand'],
+        ];
     }
 }

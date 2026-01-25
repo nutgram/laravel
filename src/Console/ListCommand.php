@@ -8,38 +8,65 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use SergiX44\Nutgram\Handlers\Handler;
-use SergiX44\Nutgram\Handlers\Type\Command as NutgramCommand;
+use SergiX44\Nutgram\Handlers\Type\InternalCommand;
 use SergiX44\Nutgram\Nutgram;
 use function Termwind\render;
 
 class ListCommand extends Command
 {
-    protected $signature = 'nutgram:list';
+    protected $signature = 'nutgram:list {--json}';
 
     protected $description = 'List all registered handlers';
 
     public function handle(Nutgram $bot): int
     {
-        $handlers = $this->getHandlers($bot)->map(fn (Handler $handler, string $key) => [
-            'handler' => $this->getHandlerName($key, $handler instanceof NutgramCommand),
-            'pattern' => $handler->getPattern(),
-            'callable' => $this->getCallableName($handler),
-        ]);
+        $handlers = $this->getHandlers($bot);
 
         if ($handlers->isEmpty()) {
-            $this->warn("No handlers have been registered.");
-            return 0;
+            $this->outputComponents()->error("Your application doesn't have any handlers.");
+
+            return self::FAILURE;
         }
 
-        render(view('terminal::list', ['items' => $handlers]));
+        $this->option('json') ? $this->asJson($handlers) : $this->forCli($handlers);
 
-        return 0;
+        return self::SUCCESS;
+    }
+
+    protected function asJson(Collection $handlers): void
+    {
+        $this->output->writeln($handlers->toJson());
+    }
+
+    protected function forCli(Collection $handlers): void
+    {
+        $handlers = $handlers->map(function ($item) {
+            $item['pattern'] = preg_replace_callback('/\{([^}]+)\}/', function ($matches) {
+                return sprintf('<fg=yellow>{%s}</>', $matches[1]);
+            }, $item['pattern']);
+
+            $item['callable'] = $this->renameCallableForCli($item['callable']);
+
+            return $item;
+        });
+
+        render(view('terminal::list', [
+            'items' => $handlers,
+            'handlerWidth' => $handlers->max(fn ($item) => strlen($item['handler'])),
+        ]));
     }
 
     protected function getHandlers(Nutgram $bot): Collection
     {
         $handlers = (fn () => $this->handlers)->call($bot);
-        return collect(Arr::dot($handlers));
+
+        return collect(Arr::dot($handlers))
+            ->map(fn (Handler $handler, string $key) => [
+                'handler' => $this->getHandlerName($key, $handler instanceof InternalCommand),
+                'pattern' => $handler->getPattern(),
+                'callable' => $this->getCallableName($handler),
+            ])
+            ->values();
     }
 
     protected function getHandlerName(string $signature, bool $isCommand = false): string
@@ -48,16 +75,17 @@ class ListCommand extends Command
             return 'onCommand';
         }
 
-        return $this->resolveUpdateListener(Str::lower($signature));
-    }
+        $signature = Str::lower($signature);
 
-    protected function resolveUpdateListener(string $signature): string
-    {
         return match (Str::before($signature, '.')) {
-            'message' => $this->resolveMessageListener($signature),
+            'message' => $this->getMessageHandlerName($signature),
             'edited_message' => 'onEditedMessage',
             'channel_post' => 'onChannelPost',
             'edited_channel_post' => 'onEditedChannelPost',
+            'business_connection' => 'onBusinessConnection',
+            'business_message' => 'onBusinessMessage',
+            'edited_business_message' => 'onEditedBusinessMessage',
+            'deleted_business_message' => 'onDeletedBusinessMessages',
             'message_reaction' => 'onMessageReaction',
             'message_reaction_count' => 'onMessageReactionCount',
             'inline_query' => 'onInlineQuery',
@@ -65,6 +93,7 @@ class ListCommand extends Command
             'callback_query' => 'onCallbackQuery',
             'shipping_query' => 'onShippingQuery',
             'pre_checkout_query' => 'onPreCheckoutQuery',
+            'purchased_paid_media' => 'onPaidMediaPurchased',
             'poll' => 'onUpdatePoll',
             'poll_answer' => 'onPollAnswer',
             'my_chat_member' => 'onMyChatMember',
@@ -81,16 +110,16 @@ class ListCommand extends Command
         };
     }
 
-    protected function resolveMessageListener(string $signature): string
+    protected function getMessageHandlerName(string $signature): string
     {
         $subHandlerSignature = Str::after($signature, 'message.');
         $subHandlerName = explode('.', $subHandlerSignature)[0] ?? null;
 
-        if(is_numeric($subHandlerName)) {
+        if (is_numeric($subHandlerName)) {
             return 'onMessage';
         }
 
-        return match($subHandlerName){
+        return match ($subHandlerName) {
             'text' => 'onText',
             'animation' => 'onAnimation',
             'audio' => 'onAudio',
@@ -121,11 +150,17 @@ class ListCommand extends Command
             'pinned_message' => 'onPinnedMessage',
             'invoice' => 'onInvoice',
             'successful_payment' => 'onSuccessfulPayment',
+            'refunded_payment' => 'onRefundedPayment',
             'users_shared' => 'onUsersShared',
             'chat_shared' => 'onChatShared',
             'connected_website' => 'onConnectedWebsite',
             'passport_data' => 'onPassportData',
             'proximity_alert_triggered' => 'onProximityAlertTriggered',
+            'boost_added' => 'onBoostAdded',
+            'direct_message_price_changed' => 'onDirectMessagePriceChanged',
+            'checklist' => 'onChecklist',
+            'checklist_tasks_done' => 'onChecklistTasksDone',
+            'checklist_tasks_added' => 'onChecklistTasksAdded',
             'forum_topic_created' => 'onForumTopicCreated',
             'forum_topic_edited' => 'onForumTopicEdited',
             'forum_topic_closed' => 'onForumTopicClosed',
@@ -155,10 +190,10 @@ class ListCommand extends Command
 
         if (is_array($callable)) {
             if (is_object($callable[0])) {
-                return sprintf("%s::%s", get_class($callable[0]), trim($callable[1]));
+                return sprintf("%s@%s", get_class($callable[0]), trim($callable[1]));
             }
 
-            return sprintf("%s::%s", trim($callable[0]), trim($callable[1]));
+            return sprintf("%s@%s", trim($callable[0]), trim($callable[1]));
         }
 
         if ($callable instanceof Closure) {
@@ -166,5 +201,18 @@ class ListCommand extends Command
         }
 
         return 'unknown';
+    }
+
+    protected function renameCallableForCli(string $callable): string
+    {
+        $path = str(config('nutgram.namespace'))
+            ->replace(base_path(), '')
+            ->substr(1)
+            ->ucfirst()
+            ->replace(DIRECTORY_SEPARATOR, '\\')
+            ->append('\\')
+            ->toString();
+
+        return str_replace($path, '', $callable);
     }
 }

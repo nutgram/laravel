@@ -12,11 +12,11 @@ test('nutgram:logout makes a logout', function () {
     });
 
     $this->artisan(LogoutCommand::class)
-        ->expectsOutput('Webhook deleted.')
-        ->expectsOutput('Bot closed.')
-        ->expectsOutput('Logged out.')
-        ->expectsOutput('Done.')
-        ->expectsOutput('Remember to set the webhook again if needed!')
+        ->expectsOutputToContain('Webhook deleted.')
+        ->expectsOutputToContain('Bot closed.')
+        ->expectsOutputToContain('Logged out.')
+        ->expectsOutputToContain('Done.')
+        ->expectsOutputToContain('Remember to set the webhook again if needed!')
         ->assertSuccessful();
 });
 
@@ -28,10 +28,10 @@ test('nutgram:logout makes a logout + drop pending updates', function () {
     });
 
     $this->artisan(LogoutCommand::class, ['--drop-pending-updates' => true])
-        ->expectsOutput('Webhook deleted.')
-        ->expectsOutput('Bot closed.')
-        ->expectsOutput('Logged out.')
-        ->expectsOutput('Done.')
-        ->expectsOutput('Remember to set the webhook again if needed!')
+        ->expectsOutputToContain('Webhook deleted.')
+        ->expectsOutputToContain('Bot closed.')
+        ->expectsOutputToContain('Logged out.')
+        ->expectsOutputToContain('Done.')
+        ->expectsOutputToContain('Remember to set the webhook again if needed!')
         ->assertSuccessful();
 });

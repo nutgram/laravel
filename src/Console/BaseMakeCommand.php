@@ -3,11 +3,12 @@
 namespace Nutgram\Laravel\Console;
 
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use RuntimeException;
 
-abstract class BaseMakeCommand extends Command
+abstract class BaseMakeCommand extends Command implements PromptsForMissingInput
 {
     protected $signature = 'nutgram:make:? {name : ? name}';
 
@@ -15,40 +16,31 @@ abstract class BaseMakeCommand extends Command
 
     public function handle(): int
     {
-        //get the file name
-        $name = $this->argument('name');
-
-        //get stub content
-        $stub = $this->getStubContent($this->getStubPath(), $this->getStubVariables());
-
-        //get destination path
         $path = sprintf("%s%s%s%s%s.php",
             config('nutgram.namespace'),
             DIRECTORY_SEPARATOR,
             $this->getSubDirName(),
             DIRECTORY_SEPARATOR,
-            $name
+            $this->argument('name'),
         );
 
-        //create directory if it doesn't exist
         $this->makeDirectory($path);
 
-        //check if file already exists
         if (File::exists($path)) {
-            $relativePath = Str::after($path, base_path());
-            $this->error(sprintf("%s already exists.", $relativePath));
-            return 1;
+            $this->outputComponents()->error(sprintf("%s already exists.", Str::after($path, base_path())));
+
+            return self::FAILURE;
         }
 
-        //write stub to file
-        File::put($path, $stub);
+        File::put($path, $this->getStubContent($this->getStubPath(), $this->getStubVariables()));
 
-        $this->info('Nutgram '.Str::singular($this->getSubDirName()).' created successfully.');
-        return 0;
+        $this->outputComponents()->success('Nutgram '.Str::singular($this->getSubDirName()).' created successfully.');
+
+        return self::SUCCESS;
     }
 
     /**
-     * Return the sub directory name
+     * Return the subdirectory name
      * @return string
      */
     abstract protected function getSubDirName(): string;
@@ -61,8 +53,7 @@ abstract class BaseMakeCommand extends Command
 
     /**
      * Map the stub variables present in stub to its value
-     *
-     * @return array
+     * @return array<string, string>
      */
     protected function getStubVariables(): array
     {
@@ -78,7 +69,7 @@ abstract class BaseMakeCommand extends Command
     /**
      * Replace the stub variables with the desire value
      * @param  string  $path
-     * @param  array  $variables
+     * @param  array<string, string>  $variables
      * @return string
      */
     protected function getStubContent(string $path, array $variables = []): string
@@ -91,7 +82,7 @@ abstract class BaseMakeCommand extends Command
     }
 
     /**
-     * Build the directory for the class if necessary.
+     * Build the directory for the class if necessary
      * @param  string  $path
      * @return void
      */
@@ -109,9 +100,7 @@ abstract class BaseMakeCommand extends Command
     }
 
     /**
-     * Get the full namespace for a given class, without the class name.
-     *
-     *
+     * Get the full namespace for a given class, without the class name
      * @param  string  $name
      * @return string
      */
@@ -128,8 +117,7 @@ abstract class BaseMakeCommand extends Command
 
 
     /**
-     * remove duplicated slashes
-     *
+     * Remove duplicated slashes
      * @param  string  $name
      * @param  string  $replacement
      * @return string
@@ -140,8 +128,7 @@ abstract class BaseMakeCommand extends Command
     }
 
     /**
-     * returns namespace from full class name
-     *
+     * Returns namespace from the full class name
      * @param  string  $name
      * @return string
      */

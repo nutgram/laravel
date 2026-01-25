@@ -13,14 +13,13 @@ class IdeGenerateCommand extends Command
 
     public function handle(): int
     {
-        $this->warn('Generating IDE helper...');
+        File::put(
+            path: base_path('_ide_helper_nutgram.php'),
+            contents: file_get_contents(__DIR__.'/../Stubs/Ide.stub'),
+        );
 
-        $helper = file_get_contents(__DIR__.'/../Stubs/Ide.stub');
+        $this->outputComponents()->success('IDE helper generated successfully.');
 
-        File::put(base_path('_ide_helper_nutgram.php'), $helper);
-
-        $this->info('Done!');
-
-        return 0;
+        return self::SUCCESS;
     }
 }

@@ -9,7 +9,7 @@ beforeEach(function () {
 
 test('nutgram:make:exception makes an exception', function () {
     $this->artisan(MakeExceptionCommand::class, ['name' => 'MyException'])
-        ->expectsOutput('Nutgram Exception created successfully.')
+        ->expectsOutputToContain('Nutgram Exception created successfully.')
         ->assertSuccessful();
 
     expect(config('nutgram.namespace').'/Exceptions/MyException.php')

@@ -9,8 +9,8 @@ test('nutgram:list with no handlers registered', function () {
 
     $this
         ->artisan(ListCommand::class)
-        ->expectsOutput('No handlers have been registered.')
-        ->assertExitCode(0);
+        ->expectsOutputToContain("Your application doesn't have any handlers.")
+        ->assertFailed();
 });
 
 test('nutgram:list with handler registered', function () {
@@ -71,5 +71,20 @@ test('nutgram:list with handler registered', function () {
     $this
         ->artisan(ListCommand::class)
         ->doesntExpectOutput('No handlers have been registered.')
-        ->assertExitCode(0);
+        ->assertSuccessful();
+});
+
+test('nutgram:list with --json flag', function(){
+    $bot = Nutgram::fake();
+
+    $bot->onCommand('start', static function () {});
+
+    $jsonOutput = [
+        ['handler' => 'onCommand', 'pattern' => '/start', 'callable' => 'closure'],
+    ];
+
+    $this
+        ->artisan(ListCommand::class, ['--json' => true])
+        ->expectsOutputToContain(json_encode($jsonOutput))
+        ->assertSuccessful();
 });

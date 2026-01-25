@@ -2,6 +2,10 @@
 
 namespace Nutgram\Laravel\Console;
 
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use function Laravel\Prompts\confirm;
+
 class MakeConversationCommand extends BaseMakeCommand
 {
     protected $signature = 'nutgram:make:conversation {name : Conversation name} {--menu : Create an inline menu}';
@@ -9,17 +13,15 @@ class MakeConversationCommand extends BaseMakeCommand
     protected $description = 'Create a new Nutgram Conversation';
 
     /**
-     * Return the sub directory name
-     * @return string
+     * @inheritDoc
      */
-    protected function getSubDirName():string
+    protected function getSubDirName(): string
     {
         return 'Conversations';
     }
 
     /**
-     * Return the stub file path
-     * @return string
+     * @inheritDoc
      */
     protected function getStubPath(): string
     {
@@ -28,5 +30,26 @@ class MakeConversationCommand extends BaseMakeCommand
         }
 
         return __DIR__.'/../Stubs/Conversation.stub';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function promptForMissingArgumentsUsing(): array
+    {
+        return [
+            'name' => ['Please provide the Conversation name:', 'E.g. FeedbackConversation'],
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function afterPromptingForMissingArguments(InputInterface $input, OutputInterface $output): void
+    {
+        $input->setOption('menu', confirm(
+            label: 'Would you like to make an inline menu conversation?',
+            default: $this->option('menu')
+        ));
     }
 }

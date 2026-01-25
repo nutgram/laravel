@@ -2,48 +2,50 @@
 
 namespace Nutgram\Laravel\Console;
 
-use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
-use JsonException;
+use Illuminate\Contracts\Console\PromptsForMissingInput;
 use SergiX44\Nutgram\Nutgram;
 use SergiX44\Nutgram\Telegram\Exceptions\TelegramException;
 
-class HookSetCommand extends Command
+class HookSetCommand extends Command implements PromptsForMissingInput
 {
     protected $signature = 'nutgram:hook:set {url} {--ip=} {--max-connections=50}';
 
     protected $description = 'Set the bot webhook';
 
-    /**
-     * @throws TelegramException
-     * @throws GuzzleException
-     * @throws JsonException
-     */
     public function handle(Nutgram $bot): int
     {
         /** @var string $url */
         $url = $this->argument('url');
 
-        /** @var ?string $ip_address */
-        $ip_address = $this->option('ip') ?: null;
+        try {
+            $bot->setWebhook(
+                url: $url,
+                ip_address: $this->option('ip') ?: null,
+                max_connections: $this->getMaxConnections(),
+                secret_token: $this->getSecretToken(),
+            );
+        } catch (TelegramException $e) {
+            $this->outputComponents()->error($e->getMessage());
 
+            return self::FAILURE;
+        }
+
+        $this->outputComponents()->success('Bot webhook set.');
+
+        return self::SUCCESS;
+    }
+
+    protected function getMaxConnections(): ?int
+    {
         /** @var ?string $max_connections */
         $max_connections = $this->option('max-connections') ?: null;
 
-        //cast to int if not null
-        if (is_numeric($max_connections)) {
-            $max_connections = (int)$max_connections;
-        }
+        return is_numeric($max_connections) ? (int)$max_connections : null;
+    }
 
-        $bot->setWebhook(
-            url: $url,
-            ip_address: $ip_address,
-            max_connections: $max_connections,
-            secret_token: config('nutgram.safe_mode', false) ? md5(config('app.key')) : null
-        );
-
-        $this->info("Bot webhook set with url: $url");
-
-        return 0;
+    protected function getSecretToken(): ?string
+    {
+        return config('nutgram.safe_mode', false) ? md5(config('app.key')) : null;
     }
 }
