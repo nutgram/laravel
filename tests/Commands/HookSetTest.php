@@ -13,7 +13,7 @@ test('nutgram:hook:set sets the bot webhook', function () {
     });
 
     $this->artisan(HookSetCommand::class, ['url' => 'https://foo.bar/hook'])
-        ->expectsOutputToContain('Bot webhook set with url: https://foo.bar/hook')
+        ->expectsOutputToContain('Bot webhook set.')
         ->assertSuccessful();
 });
 
@@ -33,6 +33,6 @@ test('nutgram:hook:set sets the bot webhook + safe mode', function () {
     });
 
     $this->artisan(HookSetCommand::class, ['url' => 'https://foo.bar/hook'])
-        ->expectsOutputToContain('Bot webhook set with url: https://foo.bar/hook')
+        ->expectsOutputToContain('Bot webhook set.')
         ->assertSuccessful();
 });

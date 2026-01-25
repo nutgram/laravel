@@ -2,11 +2,8 @@
 
 namespace Nutgram\Laravel\Console;
 
-use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
-use JsonException;
 use SergiX44\Nutgram\Nutgram;
-use SergiX44\Nutgram\Telegram\Exceptions\TelegramException;
 
 class HookRemoveCommand extends Command
 {
@@ -14,11 +11,6 @@ class HookRemoveCommand extends Command
 
     protected $description = 'Remove the bot webhook';
 
-    /**
-     * @throws TelegramException
-     * @throws GuzzleException
-     * @throws JsonException
-     */
     public function handle(Nutgram $bot): int
     {
         $dropPendingUpdates = $this->option('drop-pending-updates');
@@ -26,10 +18,11 @@ class HookRemoveCommand extends Command
         $bot->deleteWebhook($dropPendingUpdates);
 
         if ($dropPendingUpdates) {
-            $this->info('Pending updates dropped.');
+            $this->outputComponents()->info('Pending updates dropped.');
         }
-        $this->info('Bot webhook removed.');
 
-        return 0;
+        $this->outputComponents()->info('Bot webhook removed.');
+
+        return self::SUCCESS;
     }
 }

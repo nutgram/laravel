@@ -25,8 +25,8 @@ test('nutgram:make:x fails due to existing file', function (string $command, str
     $this->artisan($command, ['name' => $fileName]);
 
     $this->artisan($command, ['name' => $fileName])
-        ->expectsOutput(sprintf("%s already exists.", $relativePath))
-        ->assertExitCode(1);
+        ->expectsOutputToContain(sprintf("%s already exists.", $relativePath))
+        ->assertFailed();
 })->with([
     'commands' => [MakeCommandCommand::class, 'Commands', 'MyCommand'],
     'conversations' => [MakeConversationCommand::class, 'Conversations', 'MyConversation'],

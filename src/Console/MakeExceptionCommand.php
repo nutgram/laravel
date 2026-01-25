@@ -9,8 +9,7 @@ class MakeExceptionCommand extends BaseMakeCommand
     protected $description = 'Create a new Nutgram API Exception';
 
     /**
-     * Return the sub directory name
-     * @return string
+     * @inheritDoc
      */
     protected function getSubDirName(): string
     {
@@ -18,11 +17,20 @@ class MakeExceptionCommand extends BaseMakeCommand
     }
 
     /**
-     * Return the stub file path
-     * @return string
+     * @inheritDoc
      */
     protected function getStubPath(): string
     {
         return __DIR__.'/../Stubs/Exception.stub';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function promptForMissingArgumentsUsing(): array
+    {
+        return [
+            'name' => ['Please provide the Exception name: ', 'E.g. UserBlockedException'],
+        ];
     }
 }

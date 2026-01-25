@@ -9,20 +9,28 @@ class MakeHandlerCommand extends BaseMakeCommand
     protected $description = 'Create a new Nutgram Handler';
 
     /**
-     * Return the sub directory name
-     * @return string
+     * @inheritDoc
      */
-    protected function getSubDirName():string
+    protected function getSubDirName(): string
     {
         return 'Handlers';
     }
 
     /**
-     * Return the stub file path
-     * @return string
+     * @inheritDoc
      */
     protected function getStubPath(): string
     {
         return __DIR__.'/../Stubs/Handler.stub';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function promptForMissingArgumentsUsing(): array
+    {
+        return [
+            'name' => ['Please provide the Handler name:', 'E.g. PhotoHandler'],
+        ];
     }
 }

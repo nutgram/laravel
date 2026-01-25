@@ -9,8 +9,8 @@ test('nutgram:list with no handlers registered', function () {
 
     $this
         ->artisan(ListCommand::class)
-        ->expectsOutput('No handlers have been registered.')
-        ->assertExitCode(0);
+        ->expectsOutputToContain("Your application doesn't have any handlers.")
+        ->assertFailed();
 });
 
 test('nutgram:list with handler registered', function () {
@@ -71,5 +71,5 @@ test('nutgram:list with handler registered', function () {
     $this
         ->artisan(ListCommand::class)
         ->doesntExpectOutput('No handlers have been registered.')
-        ->assertExitCode(0);
+        ->assertSuccessful();
 });

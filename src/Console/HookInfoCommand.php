@@ -7,8 +7,7 @@ use Illuminate\Console\Command;
 use JsonException;
 use SergiX44\Nutgram\Nutgram;
 use SergiX44\Nutgram\Telegram\Exceptions\TelegramException;
-use function Termwind\{render};
-
+use function Laravel\Prompts\table;
 
 class HookInfoCommand extends Command
 {
@@ -23,37 +22,49 @@ class HookInfoCommand extends Command
      */
     public function handle(Nutgram $bot): int
     {
+        $this->newLine();
+
         $webhookInfo = $bot->getWebhookInfo();
 
         if ($webhookInfo === null) {
-            render(view('terminal::fail', ['value' => 'Unable to get webhook info']));
-            return 1;
+            $this->outputComponents()->error('Unable to get webhook info');
+            return self::FAILURE;
         }
 
-        $lastErrorDate = null;
-        if ($webhookInfo->last_error_date !== null) {
-            $lastErrorDate = date('Y-m-d H:i:s', $webhookInfo->last_error_date).' UTC';
-        }
+        $lastErrorDate = $this->getParsedDate($webhookInfo->last_error_date);
+        $lastSynchronizationErrorDate = $this->getParsedDate($webhookInfo->last_synchronization_error_date);
+        $allowedUpdates = $webhookInfo->allowed_updates ?: [];
 
-        $lastSynchronizationErrorDate = null;
-        if ($webhookInfo->last_synchronization_error_date !== null) {
-            $lastSynchronizationErrorDate = date('Y-m-d H:i:s', $webhookInfo->last_synchronization_error_date).' UTC';
-        }
+        $this->outputComponents()->twoColumnDetail('<fg=green;options=bold>Webhook Info</>');
+        $this->outputComponents()->twoColumnDetail('url', $webhookInfo->url);
+        $this->outputComponents()->twoColumnDetail(
+            first: 'has_custom_certificate',
+            second: $this->boolToConsoleString($webhookInfo->has_custom_certificate),
+        );
+        $this->outputComponents()->twoColumnDetail('pending_update_count', $webhookInfo->pending_update_count);
+        $this->outputComponents()->twoColumnDetail('ip_address', $webhookInfo->ip_address);
+        $this->outputComponents()->twoColumnDetail('last_error_date', $lastErrorDate);
+        $this->outputComponents()->twoColumnDetail('last_error_message', $webhookInfo->last_error_message);
+        $this->outputComponents()->twoColumnDetail('last_synchronization_error_date', $lastSynchronizationErrorDate);
+        $this->outputComponents()->twoColumnDetail('max_connections', $webhookInfo->max_connections);
+        $this->outputComponents()->twoColumnDetail('allowed_updates', count($allowedUpdates));
 
-        render(view('terminal::table', [
-            'items' => [
-                'url' => $webhookInfo->url,
-                'has_custom_certificate' => $webhookInfo->has_custom_certificate ? 'true' : 'false',
-                'pending_update_count' => $webhookInfo->pending_update_count,
-                'ip_address' => $webhookInfo->ip_address,
-                'last_error_date' => $lastErrorDate,
-                'last_error_message' => $webhookInfo->last_error_message,
-                'last_synchronization_error_date' => $lastSynchronizationErrorDate,
-                'max_connections' => $webhookInfo->max_connections,
-                'allowed_updates' => implode(', ', $webhookInfo->allowed_updates ?: []),
-            ]
-        ]));
+        $this->newLine();
+        $this->outputComponents()->twoColumnDetail('<fg=green;options=bold>Allowed Updates</>');
+        table(rows: collect($allowedUpdates)->chunk(5)->toArray());
 
-        return 0;
+        $this->newLine();
+
+        return self::SUCCESS;
+    }
+
+    protected function getParsedDate(?string $date): ?string
+    {
+        return $date !== null ? date('Y-m-d H:i:s', $date).' UTC' : null;
+    }
+
+    protected function boolToConsoleString(bool $value): string
+    {
+        return $value ? '<fg=green;options=bold>TRUE</>' : '<fg=yellow;options=bold>FALSE</>';
     }
 }

@@ -10,7 +10,7 @@ test('nutgram:hook:remove removes the bot webhook', function () {
     });
 
     $this->artisan(HookRemoveCommand::class, ['--drop-pending-updates' => false])
-        ->expectsOutput('Bot webhook removed.')
+        ->expectsOutputToContain('Bot webhook removed.')
         ->assertSuccessful();
 });
 
@@ -22,7 +22,7 @@ test('nutgram:hook:remove removes the bot webhook and the pending updates', func
     });
 
     $this->artisan(HookRemoveCommand::class, ['--drop-pending-updates' => true])
-        ->expectsOutput('Pending updates dropped.')
-        ->expectsOutput('Bot webhook removed.')
+        ->expectsOutputToContain('Pending updates dropped.')
+        ->expectsOutputToContain('Bot webhook removed.')
         ->assertSuccessful();
 });

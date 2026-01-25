@@ -15,8 +15,8 @@ class RegisterCommandsCommand extends Command
     {
         $bot->registerMyCommands();
 
-        $this->info('Bot commands set.');
+        $this->outputComponents()->success('Bot commands set.');
 
-        return 0;
+        return self::SUCCESS;
     }
 }
