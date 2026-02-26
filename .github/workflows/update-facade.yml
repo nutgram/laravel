@@ -1,0 +1,34 @@
+name: update-facade.yml
+on:
+    repository_dispatch:
+        types: [ nutgram-release ]
+jobs:
+    update-facade:
+        name: Update Facade Signatures
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Checkout Repository
+                uses: actions/checkout@v6
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: 8.2
+                    coverage: none
+
+            -   name: Install dependencies
+                run: composer install --no-progress --no-ansi
+
+            -   name: Update Facade Signatures
+                run: composer run update-facade
+
+            # create a pull request with the changes
+            -   name: Create Pull Request
+                uses: peter-evans/create-pull-request@v8
+                with:
+                    commit-message: "refactor: update facade signatures"
+                    title: Update Facade Signatures
+                    body: This pull request updates the facade signatures after a new release.
+                    base: master
+                    branch: update-facade-signatures
+                    reviewers: Lukasss93

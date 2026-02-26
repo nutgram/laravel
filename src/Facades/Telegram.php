@@ -343,6 +343,9 @@ use SergiX44\Nutgram\Testing\FakeNutgram;
  * @method static FakeNutgram assertActiveConversation(?int $userId = null, ?int $chatId = null)
  * @method static FakeNutgram assertNoConversation(?int $userId = null, ?int $chatId = null)
  * @method static FakeNutgram assertNoReply()
+ *
+ * @see \SergiX44\Nutgram\Nutgram
+ * @see \SergiX44\Nutgram\Testing\FakeNutgram
  */
 class Telegram extends Facade
 {
