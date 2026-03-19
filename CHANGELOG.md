@@ -2,6 +2,15 @@
 
 All notable changes to `nutgram/laravel` will be documented in this file.
 
+## 1.7.0 - 2026-03-19
+
+### What's Changed
+
+* Add GitHub Actions workflow for facade signature updates by @Lukasss93 in https://github.com/nutgram/laravel/pull/33
+* Add Laravel 13 support by @Lukasss93 in https://github.com/nutgram/laravel/pull/36
+
+**Full Changelog**: https://github.com/nutgram/laravel/compare/1.6.0...1.7.0
+
 ## 1.6.0 - 2025-11-29
 
 ### What's Changed
