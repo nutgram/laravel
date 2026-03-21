@@ -21,8 +21,14 @@ jobs:
             -   name: Install dependencies
                 run: composer install --no-progress --no-ansi
 
+            -   name: Configure Facade Documenter Repository
+                run: composer config repositories.facade-documenter vcs git@github.com:laravel/facade-documenter.git
+
+            -   name: Install Facade Documenter
+                run: composer require --dev laravel/facade-documenter:dev-main
+
             -   name: Update Facade Signatures
-                run: composer run update-facade
+                run: php -f vendor/bin/facade.php -- Nutgram\\Laravel\\Facades\\Telegram
 
             # create a pull request with the changes
             -   name: Create Pull Request
