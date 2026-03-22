@@ -441,7 +441,21 @@ use SergiX44\Nutgram\Testing\FakeNutgram;
  * @method static \SergiX44\Nutgram\Testing\FakeNutgram assertSequence(callable ...$callbacks)
  *
  * @see \SergiX44\Nutgram\Nutgram
+ * @see \SergiX44\Nutgram\Telegram\Client
+ * @see \SergiX44\Nutgram\Proxies\UpdateProxy
+ * @see \SergiX44\Nutgram\Proxies\UpdateDataProxy
+ * @see \SergiX44\Nutgram\Proxies\GlobalCacheProxy
+ * @see \SergiX44\Nutgram\Proxies\UserCacheProxy
+ * @see \SergiX44\Nutgram\Handlers\FireHandlers
+ * @see \SergiX44\Nutgram\Support\ValidatesWebData
+ * @see \SergiX44\Nutgram\Support\HandleLogging
+ * @see \SergiX44\Nutgram\Handlers\Listeners\UpdateListeners
+ * @see \SergiX44\Nutgram\Handlers\Listeners\MessageListeners
+ * @see \SergiX44\Nutgram\Handlers\Listeners\SpecialListeners
+ * @see \SergiX44\Nutgram\Support\InteractsWithRateLimit
  * @see \SergiX44\Nutgram\Testing\FakeNutgram
+ * @see \SergiX44\Nutgram\Testing\Hears
+ * @see \SergiX44\Nutgram\Testing\Asserts
  */
 class Telegram extends Facade
 {
