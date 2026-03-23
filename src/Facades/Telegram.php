@@ -441,6 +441,7 @@ use SergiX44\Nutgram\Testing\FakeNutgram;
  * @method static \SergiX44\Nutgram\Testing\FakeNutgram assertSequence(callable ...$callbacks)
  *
  * @see \SergiX44\Nutgram\Nutgram
+ * @see \SergiX44\Nutgram\Testing\FakeNutgram
  * @see \SergiX44\Nutgram\Telegram\Client
  * @see \SergiX44\Nutgram\Proxies\UpdateProxy
  * @see \SergiX44\Nutgram\Proxies\UpdateDataProxy
@@ -453,7 +454,6 @@ use SergiX44\Nutgram\Testing\FakeNutgram;
  * @see \SergiX44\Nutgram\Handlers\Listeners\MessageListeners
  * @see \SergiX44\Nutgram\Handlers\Listeners\SpecialListeners
  * @see \SergiX44\Nutgram\Support\InteractsWithRateLimit
- * @see \SergiX44\Nutgram\Testing\FakeNutgram
  * @see \SergiX44\Nutgram\Testing\Hears
  * @see \SergiX44\Nutgram\Testing\Asserts
  */
