@@ -2,6 +2,14 @@
 
 All notable changes to `nutgram/laravel` will be documented in this file.
 
+## 1.8.0 - 2026-11-20
+
+### What's Changed
+
+* fix: send asResponse() calls through the Laravel response by @sergix44 in https://github.com/nutgram/laravel/pull/47
+
+**Full Changelog**: https://github.com/nutgram/laravel/compare/1.7.1...1.8.0
+
 ## 1.7.1 - 2026-03-22
 
 ### What's Changed
