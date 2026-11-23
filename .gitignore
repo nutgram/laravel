@@ -4,7 +4,9 @@
 
 /vendor/
 composer.lock
+composer.phar
 
 phpunit.xml
 coverage.xml
 .phpunit.result.cache
+.phpunit.cache

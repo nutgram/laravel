@@ -1,0 +1,45 @@
+name: update-facade.yml
+on:
+    repository_dispatch:
+        types: [ nutgram-release ]
+    workflow_dispatch:
+
+jobs:
+    update-facade:
+        name: Update Facade Signatures
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Checkout Repository
+                uses: actions/checkout@v6
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: 8.5
+                    coverage: none
+
+            -   name: Install dependencies
+                run: composer install --no-progress --no-ansi
+
+            -   name: Configure Facade Documenter Repository
+                run: composer config repositories.facade-documenter vcs git@github.com:laravel/facade-documenter.git
+
+            -   name: Install Facade Documenter
+                run: composer require --dev laravel/facade-documenter:dev-main
+
+            -   name: Update Facade Signatures
+                run: php -f vendor/bin/facade.php -- Nutgram\\Laravel\\Facades\\Telegram
+
+            -   name: Rollback composer.json file
+                run: git restore composer.json
+
+            # create a pull request with the changes
+            -   name: Create Pull Request
+                uses: peter-evans/create-pull-request@v8
+                with:
+                    commit-message: "refactor: update facade signatures"
+                    title: Update Facade Signatures
+                    body: This pull request updates the facade signatures after a new release.
+                    base: master
+                    branch: update-facade-signatures
+                    reviewers: Lukasss93

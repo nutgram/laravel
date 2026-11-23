@@ -30,12 +30,12 @@
   "require": {
     "php": "^8.4",
     "nunomaduro/termwind": "^2.0",
-    "nutgram/nutgram": "dev-next as 5.0.0"
+    "nutgram/nutgram": "^5.0"
   },
   "require-dev": {
-    "illuminate/testing": "^11.0|^12.0",
-    "orchestra/testbench": "^9.0|^10.0",
-    "pestphp/pest": "^4.0",
+    "illuminate/testing": "^12.0|^13.0",
+    "orchestra/testbench": "^10.0|^11.0",
+    "pestphp/pest": "^5.0",
     "vimeo/psalm": "^6.0"
   },
   "autoload": {
