@@ -35,7 +35,7 @@
   "require-dev": {
     "illuminate/testing": "^12.0|^13.0",
     "orchestra/testbench": "^10.0|^11.0",
-    "pestphp/pest": "^5.0",
+    "pestphp/pest": "^4.0|^5.0",
     "vimeo/psalm": "^7.0"
   },
   "autoload": {
