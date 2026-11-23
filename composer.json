@@ -28,15 +28,15 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require": {
-    "php": "^8.2",
-    "nunomaduro/termwind": "^1.0|^2.0",
-    "nutgram/nutgram": "^4.52.0"
+    "php": "^8.4",
+    "nunomaduro/termwind": "^2.0",
+    "nutgram/nutgram": "^5.0"
   },
   "require-dev": {
     "illuminate/testing": "^12.0|^13.0",
     "orchestra/testbench": "^10.0|^11.0",
-    "pestphp/pest": "^1.1|^2.0|^3.0|^4.0",
-    "vimeo/psalm": "^6.0"
+    "pestphp/pest": "^4.0|^5.0",
+    "vimeo/psalm": "^7.0"
   },
   "autoload": {
     "psr-4": {

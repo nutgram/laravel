@@ -29,14 +29,12 @@ class NutgramServiceProvider extends ServiceProvider
         $this->app->singleton(Nutgram::class, function (Application $app) {
             $configuration = new Configuration(
                 apiUrl: config('nutgram.config.api_url', Configuration::DEFAULT_API_URL),
-                botId: config('nutgram.config.bot_id'),
                 botName: config('nutgram.config.bot_name'),
                 testEnv: config('nutgram.config.test_env', false),
                 isLocal: config('nutgram.config.is_local', false),
                 clientTimeout: config('nutgram.config.timeout', Configuration::DEFAULT_CLIENT_TIMEOUT),
                 clientOptions: config('nutgram.config.client', []),
                 container: $app,
-                hydrator: config('nutgram.config.hydrator', Configuration::DEFAULT_HYDRATOR),
                 cache: $app->get(Cache::class),
                 logger: $app->get(LoggerInterface::class)->channel(config('nutgram.log_channel', 'null')),
                 localPathTransformer: config('nutgram.config.local_path_transformer'),
@@ -61,8 +59,8 @@ class NutgramServiceProvider extends ServiceProvider
 
                 if (config('nutgram.safe_mode', false)) {
                     $webhook = new LaravelWebhook(
+                        secretToken: md5(config('app.key')),
                         getToken: fn () => request()?->header('X-Telegram-Bot-Api-Secret-Token'),
-                        secretToken: md5(config('app.key'))
                     );
                     $webhook->setSafeMode(true);
                 }
