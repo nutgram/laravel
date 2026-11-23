@@ -8,7 +8,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use SergiX44\Nutgram\Handlers\Handler;
-use SergiX44\Nutgram\Handlers\Type\Command as NutgramCommand;
+use SergiX44\Nutgram\Handlers\Type\InternalCommand;
 use SergiX44\Nutgram\Nutgram;
 use function Termwind\render;
 
@@ -21,7 +21,7 @@ class ListCommand extends Command
     public function handle(Nutgram $bot): int
     {
         $handlers = $this->getHandlers($bot)->map(fn (Handler $handler, string $key) => [
-            'handler' => $this->getHandlerName($key, $handler instanceof NutgramCommand),
+            'handler' => $this->getHandlerName($key, $handler instanceof InternalCommand),
             'pattern' => $handler->getPattern(),
             'callable' => $this->getCallableName($handler),
         ]);
